@@ -17,7 +17,7 @@ $Roluri = array(1, 2);
 $Server = "localhost";
 $NumeDB = "learnsphere";
 $dsn = "mysql:host=$Server;dbname=$NumeDB;charset=utf8mb4";
-$UserDB = "databaseAdmin";
+$UserDB = "LearnSphereAdmin";
 $ParolaDB = "5K1LL-155U3+L+RAT10";
 $optiuni = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
 
