@@ -37,7 +37,7 @@ file_exists(__DIR__ . "/config.php") ?
                         <input type="password" id="parola" name="parola" required>
                     </div>
                     <div class="forgot-password">
-                        <a href="#">Ai uitat parola?</a>
+                        <a href="password_reset.php">Ai uitat parola?</a>
                     </div>
                     <button class="form-btn">Log in</button>
                 </form>
