@@ -45,11 +45,5 @@ file_exists(__DIR__ . "/config.php") ?
         </div>
     </section>
 </body>
-<script>
-    function afisareMesaj() {
-        var mesaj = document.getElementById('mesaj');
-        mesaj.innerHTML = '<div class="alert alert-danger alert-dismissible fade show" role="alert">Datele de autentificare sunt incorecte!<br>Încercați o noua conectare sau contactați administratorul.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-    }
-</script>
 
 </html>
