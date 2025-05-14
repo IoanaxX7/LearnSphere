@@ -1,0 +1,149 @@
+:root {
+  --bg: rgb(222, 222, 222);
+  --bg-form: #f6f6f6;
+  --txt: rgb(127, 127, 127);
+  --active: rgb(64, 64, 64);
+}
+
+.login-body {
+  margin: -1em;
+  padding: 0;
+  background-color: var(--bg);
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.form-box {
+  position: relative;
+  width: 450px;
+  padding-top: 2.5em;
+  padding-bottom: 2.5em;
+  margin: 2em;
+  background: var(--bg-form);
+  border-radius: 1.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0.5em 1em 2.5em #6d6d6d;
+}
+
+.inputbox {
+  margin: 30px 0;
+  border-bottom: 2px solid var(--txt);
+}
+
+.inputbox label {
+  color: var(--txt);
+  font-size: 1.1em;
+}
+
+.inputbox input {
+  height: 50px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1.1em;
+  padding: 0 35px 0 5px;
+  color: var(--txt);
+}
+
+.form-btn {
+  width: 100%;
+  height: 40px;
+  border-radius: 40px;
+  border-color: black;
+  color: var(--txt);
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.buttons {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 999px;
+  border-color: var(--txt);
+  overflow: hidden;
+  border: 2px solid #ccc;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.btn-title {
+  flex: 1;
+  border: none;
+  padding: 10px 25px;
+  background-color: transparent;
+  outline: none;
+  cursor: pointer;
+  font-size: 1.5em;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.active {
+  background-color: var(--active);
+  color: white;
+}
+
+.btn-title:not(.active) {
+  color: black;
+}
+
+.btn-title:hover {
+  background-color: var(--active);
+  color: white;
+}
+
+.forgot-password {
+  margin-bottom: 1.5em;
+}
+
+.forgot-password a {
+  font-size: 0.9rem;
+  color: var(--txt);
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+.veryWeak {
+  color: white;
+  background: #e74c3c;
+}
+.weak {
+  color: white;
+  background: #e67e22;
+}
+.moderate {
+  color: white;
+  background: #f1c40f;
+}
+.strong {
+  color: white;
+  background: #2ecc71;
+}
+.veryStrong {
+  color: white;
+  background: #27ae60;
+}
+
+.form-text {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  margin-top: -2em;
+}
+
+.form-btn-signin{
+  margin-top: 1.5em;
+}
