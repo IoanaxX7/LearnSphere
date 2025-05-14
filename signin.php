@@ -68,7 +68,7 @@ file_exists(__DIR__ . "/config.php") ?
                     <div id="ajutorParola2" class="form-text">
                         <span id="potrivire_parole" class="bi bi-x-lg" style="color: #FF0004;"></span>
                     </div>
-                    <button class="form-btn">Sign in</button>
+                    <button class="form-btn form-btn-signin">Sign in</button>
                 </form>
             </div>
         </div>
