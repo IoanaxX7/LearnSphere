@@ -52,7 +52,7 @@
 
             <div class="dropdown ms-3 mt-2 mt-lg-0">
                 <a href="#" class="btn p-0 border-0 bg-transparent" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="resurse/default.jpg" alt="Profile" class="rounded-circle" style="width: 30px; height: 30px;">
+                    <img src="<?php echo url() . '/poze_profil/' . $_SESSION['username'] . '/' . $_SESSION['pozaProfil']; ?>" alt="Profile" class="rounded-circle" style="width: 30px; height: 30px;">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                     <li><a class="dropdown-item" href="<?php echo url() ?>/setari/setari.php">Setari</a></li>
