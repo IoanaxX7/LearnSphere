@@ -12,6 +12,7 @@ if (isset($_POST['nume_utilizator']) && isset($_POST['parola'])) {
 
     if ($user && password_verify($password, $user['parola'])) {
         $_SESSION['username'] = $username;
+        $_SESSION['rol'] = $user['rol'];
         header("Location: ../index.php");
         exit();
     } else {
