@@ -13,6 +13,17 @@ if (isset($_POST['nume_utilizator']) && isset($_POST['parola'])) {
     if ($user && password_verify($password, $user['parola'])) {
         $_SESSION['username'] = $username;
         $_SESSION['rol'] = $user['rol'];
+        $_SESSION['pozaProfil'] = $user['pozaProfil'];
+
+        $userDir = __DIR__ . "/../poze_profil/$username";
+        if (!file_exists($userDir)) {
+            mkdir($userDir, 0755, true);
+        }
+        
+        $defaultImage = __DIR__ . '/../poze_profil/default.jpg';
+        $destinationImage = $userDir . "/default.jpg";
+        copy($defaultImage, $destinationImage);
+
         header("Location: ../index.php");
         exit();
     } else {
