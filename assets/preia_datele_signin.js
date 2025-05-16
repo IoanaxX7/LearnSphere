@@ -32,7 +32,7 @@ window.addEventListener("load", function (e) {
           parola2: parola2.value,
         };
 
-        const apiUrl = "actiuni/adauga_utilizator.php";
+        const apiUrl = "actiuni/signin_process.php";
         const fullUrl = `${apiUrl}`;
 
         try {
