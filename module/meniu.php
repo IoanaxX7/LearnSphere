@@ -14,17 +14,17 @@
                         Materiale
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="materialeDropdown">
-                        <li><a class="dropdown-item" href="<?php echo url() ?>/postari/materiale.php">Cauta materiale</a></li>
-                        <li><a class="dropdown-item" href="<?php echo url() ?>/postari/form_material.php">Incarca un material</a></li>
+                        <li><a class="dropdown-item" href="<?php echo url() ?>/postari/materiale.php">Caută materiale</a></li>
+                        <li><a class="dropdown-item" href="<?php echo url() ?>/postari/form_material.php">Încarcă un material</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="intrebariDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Intrebari
+                        Întrebări
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="intrebariDropdown">
-                        <li><a class="dropdown-item" href="<?php echo url() ?>/postari/intrebari.php">Cauta intrebari</a></li>
-                        <li><a class="dropdown-item" href="<?php echo url() ?>/postari/form_intrebare.php">Pune o intrebare</a></li>
+                        <li><a class="dropdown-item" href="<?php echo url() ?>/postari/intrebari.php">Caută întrebări</a></li>
+                        <li><a class="dropdown-item" href="<?php echo url() ?>/postari/form_intrebare.php">Pune o întrebare</a></li>
                     </ul>
                 </li>
                 <?php if (in_array($_SESSION["rol"], [1])): ?>
@@ -34,7 +34,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li><a class="dropdown-item" href="<?php echo url() ?>/admin/utilizatori.php">Utilizatori</a></li>
-                            <li><a class="dropdown-item" href="<?php echo url() ?>/admin/postari.php">Postari</a></li>
+                            <li><a class="dropdown-item" href="<?php echo url() ?>/admin/postari.php">Postări</a></li>
                         </ul>
                     </li>
                 <?php endif; ?>
@@ -55,8 +55,8 @@
                     <img src="<?php echo url() . '/poze_profil/' . $_SESSION['username'] . '/' . $_SESSION['pozaProfil']; ?>" alt="Profile" class="rounded-circle" style="width: 30px; height: 30px;">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                    <li><a class="dropdown-item" href="<?php echo url() ?>/setari/setari.php">Setari</a></li>
-                    <li><a class="dropdown-item" href="<?php echo url() ?>/deconectare.php">Deconectare</a></li>
+                    <li><a class="dropdown-item" href="<?php echo url() ?>/setari/setari.php">Setări</a></li>
+                    <li><a class="dropdown-item" href="<?php echo url() ?>/logout.php">Deconectare</a></li>
                 </ul>
             </div>
         </div>
