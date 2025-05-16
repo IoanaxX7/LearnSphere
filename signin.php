@@ -18,7 +18,7 @@ file_exists(__DIR__ . "/config.php") ?
     ?>
     <link rel="stylesheet" href="assets/stiluriForms.css">
     <script type="text/javascript" src="assets/parola.js"></script>
-    <script type="text/javascript" src="assets/preia_datele.js"></script>
+    <script type="text/javascript" src="assets/preia_datele_signin.js"></script>
 </head>
 
 <body class="login-body">
