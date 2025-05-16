@@ -48,7 +48,7 @@ file_exists(__DIR__ . "/config.php") ?
                             <input type="email" id="email" name="email" required>
                         </div>
                         <div class="inputbox">
-                            <label for="data_nasterii">Data nasterii:</label>
+                            <label for="data_nasterii">Data nașterii:</label>
                             <input type="date" id="data_nasterii" name="data_nasterii" required>
                         </div>
                         <div class="inputbox">
@@ -64,7 +64,7 @@ file_exists(__DIR__ . "/config.php") ?
                             <span id="putere_parola" class=""></span>
                         </div>
                         <div class="inputbox">
-                            <label for="parola2">Confirmati parola:</label>
+                            <label for="parola2">Confirmați parola:</label>
                             <input type="password" id="parola2" name="parola2" required>
                         </div>
                         <div id="ajutorParola2" class="form-text">
