@@ -1,4 +1,5 @@
 window.addEventListener("load", function (e) {
+  //Adauga utilizator
   const modal_adauga_utilizator = document.getElementById(
     "modal_adauga_utilizator"
   );
@@ -166,4 +167,53 @@ window.addEventListener("load", function (e) {
     },
     false
   );
+
+  //Completeaza datele de utilizator in caseta modala
+  document.querySelectorAll(".edit").forEach((button) => {
+    button.addEventListener("click", function () {
+      const userId = this.getAttribute("id");
+
+      fetch("../actiuni/preia_utilizator.php?id=" + userId)
+        .then((response) => response.json())
+        .then((data) => {
+          const modal = document.getElementById("modal_modifica_utilizator");
+
+          modal.querySelector("#rol").value = data.rol;
+          modal.querySelector("#nume").value = data.nume;
+          modal.querySelector("#prenume").value = data.prenume;
+          modal.querySelector("#nume_utilizator").value = data.username;
+          modal.querySelector("#email").value = data.email;
+          modal.querySelector("#data_nasterii").value = data.dataNasterii;
+        })
+        .catch((error) =>
+          console.error("Eroare la încărcarea utilizatorului:", error)
+        );
+    });
+  });
+
+  //Sterge utilizator
+  document.querySelectorAll(".delete").forEach((button) => {
+    button.addEventListener("click", function (e) {
+      e.preventDefault();
+      const userID = this.id;
+
+      if (confirm("Ești sigur că vrei să ștergi acest utilizator?")) {
+        fetch("../actiuni/sterge_utilizator.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: `userID=${userID}`,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              this.closest("tr").remove();
+            } else {
+              alert("Eroare: " + data.message);
+            }
+          });
+      }
+    });
+  });
 });
