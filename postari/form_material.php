@@ -42,7 +42,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
                         <input type="text" id="titlu" name="titlu" required>
                     </div>
                     <div class="inputbox">
-                        <label for="categorie" class="col-form-label">Tip utilizator:</label>
+                        <label for="categorie" class="col-form-label">Categorie:</label>
                         <div>
                             <select name="categorie" id="categorie" class="form-control categorii" required>
                                 <option selected value> -- alegeți o opțiune -- </option>
