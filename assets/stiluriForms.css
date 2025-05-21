@@ -117,27 +117,6 @@
   text-decoration: underline;
 }
 
-.veryWeak {
-  color: white;
-  background: #e74c3c;
-}
-.weak {
-  color: white;
-  background: #e67e22;
-}
-.moderate {
-  color: white;
-  background: #f1c40f;
-}
-.strong {
-  color: white;
-  background: #2ecc71;
-}
-.veryStrong {
-  color: white;
-  background: #27ae60;
-}
-
 .form-text {
   margin-left: 0.5em;
   margin-right: 0.5em;
