@@ -1,5 +1,4 @@
 window.addEventListener("load", function (e) {
-
   const modal_adauga_categorie = document.getElementById(
     "modal_adauga_categorie"
   );
@@ -8,7 +7,7 @@ window.addEventListener("load", function (e) {
   ).elements;
   const form_adauga_categorie = document.getElementById(
     "form_adauga_categorie"
-  ).elements;
+  );
 
   const nume_catgorie = document.getElementById("nume_catgorie");
   const descriere = document.getElementById("descriere");
@@ -62,7 +61,7 @@ window.addEventListener("load", function (e) {
                 nume_catgorie.classList.add("is-invalid");
                 mesaj.innerHTML += datele.erori_validare.nume_catgorie + "<br>";
               }
-              
+
               const modal_body = document.querySelector(".modal-body");
               modal_body.insertBefore(mesaj, modal_body.firstChild);
             } else {
@@ -79,14 +78,13 @@ window.addEventListener("load", function (e) {
                 const modal_body = document.querySelector(".modal-body");
                 modal_body.insertBefore(mesaj3, modal_body.firstChild);
                 form_adauga_categorie.reset();
-                Array.from(elemente_formular_modal_adauga_categorie).forEach(
-                  (element_formular_modal_adauga_categorie) => {
-                    element_formular_modal_adauga_categorie.classList.remove(
-                      "is-valid",
-                      "is-invalid"
-                    );
-                  }
-                );
+                if (elemente_formular_modal_adauga_categorie) {
+                  Array.from(elemente_formular_modal_adauga_categorie).forEach(
+                    (element) => {
+                      element.classList.remove("is-valid", "is-invalid");
+                    }
+                  );
+                }
               }
               if (datele.succes_validare) {
                 const mesaj = document.createElement("div");
