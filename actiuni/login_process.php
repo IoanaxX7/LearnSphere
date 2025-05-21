@@ -15,12 +15,12 @@ if (isset($_POST['nume_utilizator']) && isset($_POST['parola'])) {
         $_SESSION['rol'] = $user['rol'];
         $_SESSION['pozaProfil'] = $user['pozaProfil'];
 
-        $userDir = __DIR__ . "/../poze_profil/$username";
+        $userDir = __DIR__ . "/../uploads/$username";
         if (!file_exists($userDir)) {
             mkdir($userDir, 0755, true);
         }
         
-        $defaultImage = __DIR__ . '/../poze_profil/default.jpg';
+        $defaultImage = __DIR__ . '/../uploads/default.jpg';
         $destinationImage = $userDir . "/default.jpg";
         copy($defaultImage, $destinationImage);
 
