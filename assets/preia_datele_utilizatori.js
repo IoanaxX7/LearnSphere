@@ -168,27 +168,115 @@ window.addEventListener("load", function (e) {
     false
   );
 
-  //Completeaza datele de utilizator in caseta modala
+  //Adauga datele utilizatorului in caseta modala
   document.querySelectorAll(".edit").forEach((button) => {
     button.addEventListener("click", function () {
       const userId = this.getAttribute("id");
+      document.getElementById("userID").value = userId;
 
       fetch("../actiuni/preia_utilizator.php?id=" + userId)
         .then((response) => response.json())
         .then((data) => {
           const modal = document.getElementById("modal_modifica_utilizator");
 
-          modal.querySelector("#rol").value = data.rol;
-          modal.querySelector("#nume").value = data.nume;
-          modal.querySelector("#prenume").value = data.prenume;
-          modal.querySelector("#nume_utilizator").value = data.username;
-          modal.querySelector("#email").value = data.email;
-          modal.querySelector("#data_nasterii").value = data.dataNasterii;
+          modal.querySelector("#modifica_rol").value = data.rol;
+          modal.querySelector("#modifica_nume").value = data.nume;
+          modal.querySelector("#modifica_prenume").value = data.prenume;
+          modal.querySelector("#modifica_nume_utilizator").value =
+            data.username;
+          modal.querySelector("#modifica_email").value = data.email;
+          modal.querySelector("#modifica_data_nasterii").value =
+            data.dataNasterii;
         })
         .catch((error) =>
           console.error("Eroare la încărcarea utilizatorului:", error)
         );
     });
+  });
+
+  //Modifica datele utilizatorului
+  const form_modifica_utilizator = document.getElementById(
+    "form_modifica_utilizator"
+  );
+  const modifica_rol = document.getElementById("modifica_rol");
+  const edit_nume = document.getElementById("modifica_nume");
+  const edit_prenume = document.getElementById("modifica_prenume");
+  const edit_nume_utilizator = document.getElementById(
+    "modifica_nume_utilizator"
+  );
+  const edit_email = document.getElementById("modifica_email");
+  const edit_data_nasterii = document.getElementById("modifica_data_nasterii");
+  const edit_parola1 = document.getElementById("modifica_parola1");
+  const edit_parola2 = document.getElementById("modifica_parola2");
+  
+
+  form_modifica_utilizator.addEventListener("submit", function (event) {
+    event.preventDefault();
+    
+    const userId = document.getElementById("userID").value;
+    console.log("User ID:", userId);
+
+    async function preiaDatele() {
+      let data = {
+        userId: userId,
+        rol: modifica_rol.value,
+        nume: edit_nume.value,
+        prenume: edit_prenume.value,
+        nume_utilizator: edit_nume_utilizator.value,
+        email: edit_email.value,
+        data_nasterii: edit_data_nasterii.value,
+        parola1: edit_parola1.value,
+        parola2: edit_parola2.value,
+      };
+
+      const apiUrl = "../actiuni/modifica_utilizator.php";
+
+      try {
+        const raspuns = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (!raspuns.ok) {
+          throw new Error(`HTTP error! Status: ${raspuns.status}`);
+        }
+
+        // Correctly parse the JSON response body
+        const rezultat = await raspuns.json();
+        console.log("Parsed JSON response:", rezultat);
+
+        if (rezultat.error) {
+          // Show error message from server
+          showAlert(rezultat.error, "danger");
+        } else if (rezultat.success) {
+          // Show success message from server
+          showAlert(rezultat.success, "success");
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        showAlert(error.message, "danger");
+      }
+    }
+
+    // Helper function to show alert messages inside modal-body
+    function showAlert(message, type) {
+      // Remove existing alerts
+      const existingAlerts = document.querySelectorAll(".alert");
+      existingAlerts.forEach((alert) => alert.remove());
+
+      const mesaj = document.createElement("div");
+      mesaj.className = `alert alert-${type} alert-dismissible fade show`;
+      mesaj.innerHTML =
+        message +
+        `<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+      const modal_body = document.querySelector(".modal-body");
+      modal_body.insertBefore(mesaj, modal_body.firstChild);
+    }
+
+    preiaDatele();
   });
 
   //Sterge utilizator
