@@ -1,6 +1,5 @@
 <?php
 include('../config.php');
-session_start(); // Make sure session is started
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $erori_validare = [];
@@ -10,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $detalii = $_POST['detalii'] ?? '';
     $file = $_FILES['material'] ?? null;
 
-    // Validare
     if (empty($intrebare)) {
         $erori_validare['intrebare'] = 'Întrebarea este obligatorie.';
     }
@@ -25,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Procesare upload doar dacă s-a trimis fișier
     $file_name = null;
 
     if ($file && $file['error'] === UPLOAD_ERR_OK) {
@@ -45,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Inserare în baza de date
     try {
         $sql = 'INSERT INTO intrebari (userID, intrebare, categorieID, detalii, material, dataPostarii)
                 VALUES (:userID, :intrebare, :categorie, :detalii, :material, CURDATE())';
@@ -56,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':intrebare' => $intrebare,
             ':categorie' => $categorie,
             ':detalii' => $detalii,
-            ':material' => $file_name // may be null
+            ':material' => $file_name 
         ]);
 
         if ($executat) {
