@@ -35,6 +35,7 @@
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li><a class="dropdown-item" href="<?php echo url() ?>/admin/utilizatori.php">Utilizatori</a></li>
                             <li><a class="dropdown-item" href="<?php echo url() ?>/admin/postari.php">Postări</a></li>
+                            <li><a class="dropdown-item" href="<?php echo url() ?>/admin/categorii.php">Categorii</a></li>
                         </ul>
                     </li>
                 <?php endif; ?>
