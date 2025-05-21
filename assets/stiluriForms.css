@@ -123,6 +123,54 @@
   margin-top: -2em;
 }
 
-.form-btn-signin{
+.form-btn-signin {
   margin-top: 1.5em;
+}
+
+.material_form {
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+.form-title {
+  text-align: center;
+}
+
+.form-material {
+  margin-top: 1em;
+}
+
+.file label {
+  padding-bottom: 0.5em;
+}
+
+.categorii{
+  border: none;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.adauga-categorie {
+  margin-top: -1.5em;
+  margin-bottom: -1em;
+}
+
+.adauga-categorie a{
+  font-size: 0.9rem;
+  color: var(--txt);
+  text-decoration: none;
+}
+
+.adauga-categorie a:hover{
+  text-decoration: underline;
+}
+
+.form-intrebare{
+  margin-top: -1.5em;
+}
+
+.form-categorii{
+  margin-top: -5em;
 }
