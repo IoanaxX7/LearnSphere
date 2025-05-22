@@ -69,11 +69,11 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
                         </a>
                     </div>
                     <div class="inputbox">
-                        <label for="detalii">Detalii:</label>
+                        <label for="detalii">Detalii (opțional):</label>
                         <input type="text" id="detalii" name="detalii">
                     </div>
                     <div class="inputbox file">
-                        <label for="material">Material (optional):</label>
+                        <label for="material">Material (opțional):</label>
                         <input type="file" id="material" name="material">
                     </div>
                     <button class="form-btn">Postează</button>
