@@ -5,46 +5,61 @@ header('Content-Type: application/json');
 
 $userID = $_SESSION['userID'] ?? null;
 $materialID = $_POST['materialID'] ?? null;
+$comentariuID = $_POST['comentariuID'] ?? null;
 $reaction = $_POST['reaction'] ?? null;
 
-if (!$userID || !$materialID || !in_array($reaction, ['like', 'dislike'])) {
+if (!$userID || !in_array($reaction, ['like', 'dislike'])) {
     echo json_encode(['success' => false, 'message' => 'Invalid data']);
     exit;
 }
 
-// Clean up both tables
+if ($materialID !== null) {
+    $id = (int)$materialID;
+    $idField = 'materialID';
+    $likesTable = 'likes';
+    $dislikesTable = 'dislikes';
+} elseif ($comentariuID !== null) {
+    $id = (int)$comentariuID;
+    $idField = 'comentariuID';
+    $likesTable = 'likes';
+    $dislikesTable = 'dislikes';
+} else {
+    echo json_encode(['success' => false, 'message' => 'No ID provided']);
+    exit;
+}
+
+// Remove opposite reaction first
 if ($reaction === 'like') {
-    $conexiune->prepare("DELETE FROM dislikes WHERE userID = ? AND materialID = ?")->execute([$userID, $materialID]);
-    $stmt = $conexiune->prepare("SELECT 1 FROM likes WHERE userID = ? AND materialID = ?");
-    $stmt->execute([$userID, $materialID]);
+    $conexiune->prepare("DELETE FROM $dislikesTable WHERE userID = ? AND $idField = ?")->execute([$userID, $id]);
+    $stmt = $conexiune->prepare("SELECT 1 FROM $likesTable WHERE userID = ? AND $idField = ?");
+    $stmt->execute([$userID, $id]);
     if ($stmt->rowCount() === 0) {
-        $conexiune->prepare("INSERT INTO likes (userID, materialID, dataPostarii) VALUES (?, ?, NOW())")
-            ->execute([$userID, $materialID]);
+        $conexiune->prepare("INSERT INTO $likesTable (userID, $idField, dataPostarii) VALUES (?, ?, NOW())")
+            ->execute([$userID, $id]);
     } else {
-        $conexiune->prepare("DELETE FROM likes WHERE userID = ? AND materialID = ?")->execute([$userID, $materialID]);
+        $conexiune->prepare("DELETE FROM $likesTable WHERE userID = ? AND $idField = ?")->execute([$userID, $id]);
     }
 } else {
-    $conexiune->prepare("DELETE FROM likes WHERE userID = ? AND materialID = ?")->execute([$userID, $materialID]);
-    $stmt = $conexiune->prepare("SELECT 1 FROM dislikes WHERE userID = ? AND materialID = ?");
-    $stmt->execute([$userID, $materialID]);
+    $conexiune->prepare("DELETE FROM $likesTable WHERE userID = ? AND $idField = ?")->execute([$userID, $id]);
+    $stmt = $conexiune->prepare("SELECT 1 FROM $dislikesTable WHERE userID = ? AND $idField = ?");
+    $stmt->execute([$userID, $id]);
     if ($stmt->rowCount() === 0) {
-        $conexiune->prepare("INSERT INTO dislikes (userID, materialID, dataPostarii) VALUES (?, ?, NOW())")
-            ->execute([$userID, $materialID]);
+        $conexiune->prepare("INSERT INTO $dislikesTable (userID, $idField, dataPostarii) VALUES (?, ?, NOW())")
+            ->execute([$userID, $id]);
     } else {
-        $conexiune->prepare("DELETE FROM dislikes WHERE userID = ? AND materialID = ?")->execute([$userID, $materialID]);
+        $conexiune->prepare("DELETE FROM $dislikesTable WHERE userID = ? AND $idField = ?")->execute([$userID, $id]);
     }
 }
 
 // Get updated counts
-$stmt = $conexiune->prepare("SELECT COUNT(*) FROM likes WHERE materialID = ?");
-$stmt->execute([$materialID]);
+$stmt = $conexiune->prepare("SELECT COUNT(*) FROM $likesTable WHERE $idField = ?");
+$stmt->execute([$id]);
 $likeCount = $stmt->fetchColumn();
 
-$stmt = $conexiune->prepare("SELECT COUNT(*) FROM dislikes WHERE materialID = ?");
-$stmt->execute([$materialID]);
+$stmt = $conexiune->prepare("SELECT COUNT(*) FROM $dislikesTable WHERE $idField = ?");
+$stmt->execute([$id]);
 $dislikeCount = $stmt->fetchColumn();
 
-// Output JSON
 echo json_encode([
     'success' => true,
     'likes' => $likeCount,
