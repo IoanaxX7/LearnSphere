@@ -69,11 +69,11 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
                         </a>
                     </div>
                     <div class="inputbox">
-                        <label for="descriere">Descriere (optional):</label>
+                        <label for="descriere">Descriere (opțional):</label>
                         <input type="text" id="descriere" name="descriere">
                     </div>
                     <div class="inputbox">
-                        <label for="cuvinte_cheie">Cuvinte cheie (optional):</label>
+                        <label for="cuvinte_cheie">Cuvinte cheie (opțional):</label>
                         <input type="text" id="cuvinte_cheie" name="cuvinte_cheie">
                     </div>
                     <div class="inputbox file">
