@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (move_uploaded_file($file['tmp_name'], $target_path)) {
         try {
             $sql = 'INSERT INTO materiale (userID, titlu, categorieID, descriere, cuvinteCheie, material, dataPostarii)
-                    VALUES (:userID, :titlu, :categorie, :descriere, :cuvinte_cheie, :material, CURDATE())';
+                    VALUES (:userID, :titlu, :categorie, :descriere, :cuvinte_cheie, :material, NOW())';
 
             $stmt = $conexiune->prepare($sql);
             $executat = $stmt->execute([
