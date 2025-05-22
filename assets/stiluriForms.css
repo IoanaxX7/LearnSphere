@@ -184,3 +184,12 @@
 .form-btn-delete{
   margin-top: .5em;
 }
+
+/* .form-cauta-categorie{
+ margin-top: -20em;
+} */
+
+.cauta-categorie{
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+}
