@@ -170,3 +170,17 @@
 .form-intrebare{
   margin-top: -1.5em;
 }
+
+.form-profil{
+  padding-left: 2em;
+  padding-right: 2em;
+  width: 35em;
+}
+
+.poza_profil{
+  margin-top: .5em;
+}
+
+.form-btn-delete{
+  margin-top: .5em;
+}
