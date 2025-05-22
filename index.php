@@ -73,7 +73,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
                         </div>
                     </div>
                     <div class="post-content">
-                        <a href="postari/postare.php?id=' . $rand['materialID'] . '">
+                        <a href="postari/postare_material.php?id=' . $rand['materialID'] . '">
                             <h4>' . htmlspecialchars($rand["titlu"]) . '</h4>
                         </a>
                         <h6 class="category">' . htmlspecialchars($rand["nume"]) . '</h6>
