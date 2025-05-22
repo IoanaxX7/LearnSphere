@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $sql = 'INSERT INTO intrebari (userID, intrebare, categorieID, detalii, material, dataPostarii)
-                VALUES (:userID, :intrebare, :categorie, :detalii, :material, CURDATE())';
+                VALUES (:userID, :intrebare, :categorie, :detalii, :material, NOW())';
 
         $stmt = $conexiune->prepare($sql);
         $executat = $stmt->execute([
