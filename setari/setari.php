@@ -32,11 +32,11 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
         die("Fisierul meniu nu a fost gasit!");
     ?>
 
-    <section class="login-page" id="date_personale">
+    <section class="login-page">
         <div class="form-box form-profil">
             <div class="form-value">
                 <form action="" method="post" id="date_personale">
-                    <div class="signin-body">
+                    <div class="signin-body settings">
                         <h2 class="form-title">Date personale</h2>
                         <input type="hidden" id="userID" name="userID" <?php echo 'value="' . $_SESSION['userID'] . '"'; ?>>
                         <div class="inputbox">
