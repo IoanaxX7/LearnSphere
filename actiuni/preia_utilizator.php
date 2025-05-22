@@ -13,11 +13,11 @@ if (isset($_GET['id'])) {
         if ($user) {
             echo json_encode($user);
         } else {
-            echo json_encode(["error" => "User not found"]);
+            echo json_encode(["error" => "Materialul nu a fost găsit."]);
         }
     } catch (PDOException $e) {
-        echo json_encode(["error" => "Database error: " . $e->getMessage()]);
+        echo json_encode(["error" => "Eroare la baza de date: " . $e->getMessage()]);
     }
 } else {
-    echo json_encode(["error" => "No ID provided"]);
+    echo json_encode(["error" => "ID nu a fost găsit"]);
 }
