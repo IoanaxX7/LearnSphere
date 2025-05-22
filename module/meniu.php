@@ -34,7 +34,8 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                             <li><a class="dropdown-item" href="<?php echo url() ?>/admin/utilizatori.php">Utilizatori</a></li>
-                            <li><a class="dropdown-item" href="<?php echo url() ?>/admin/postari.php">Postări</a></li>
+                            <li><a class="dropdown-item" href="<?php echo url() ?>/admin/materiale.php">Materiale</a></li>
+                            <li><a class="dropdown-item" href="<?php echo url() ?>/admin/intrebari.php">Întrebări</a></li>
                             <li><a class="dropdown-item" href="<?php echo url() ?>/admin/categorii.php">Categorii</a></li>
                         </ul>
                     </li>
