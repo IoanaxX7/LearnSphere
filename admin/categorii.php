@@ -41,7 +41,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                     <div class="card-body">
                         <div style="display: flex;">
                             <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                                data-bs-target="#modal_modifica_categorie">
+                                data-bs-target="#modal_adauga_categorie">
                                 Adaugă categorie
                             </button>
                             <form class="d-flex" role="search" style="margin-left: 1rem;">
@@ -128,14 +128,14 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
     <script type="text/javascript" src="../assets/preia_datele_categorie.js"></script>
 
 
-    <!-- Casetă modală - Modifica utilizator-->
+    <!-- Casetă modală - Modifica categorie-->
     <div class="modal fade" id="modal_modifica_categorie" data-bs-backdrop="static" data-bs-keyboard="false"
         tabindex="-1" aria-labelledby="eticheta_modifica_categorie" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="eticheta_modifica_categorie">Adaugă
-                        o categorie</h1>
+                    <h1 class="modal-title fs-5" id="eticheta_modifica_categorie">Modifică
+                        categoria</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Închide"></button>
                 </div>
                 <form method="post" action="" id="form_modifica_categorie">
