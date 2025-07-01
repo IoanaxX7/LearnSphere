@@ -12,7 +12,7 @@ if(error_reporting() !== E_ALL){
     ini_set('display_startup_errors', 1);
 }
 
-$Roluri = array(1, 2, 3);
+$Roluri = array(1, 2);
 
 $Server = "localhost";
 $NumeDB = "learnsphere";
