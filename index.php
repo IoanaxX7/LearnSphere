@@ -6,10 +6,6 @@ if (!file_exists(__DIR__ . "/config.php")) {
 
 require_once(__DIR__ . "/config.php");
 
-if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
-    header("Location: logout.php");
-    exit();
-}
 ?>
 
 <!DOCTYPE html>
@@ -33,32 +29,44 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
 
     <?php
     try {
-        $cerereSQL = $conexiune->prepare('
-    SELECT 
-        m.*, 
-        u.username AS username, 
-        u.pozaProfil, 
-        c.nume,
-        EXISTS (
-            SELECT 1 FROM likes l 
-            WHERE l.materialID = m.materialID AND l.userID = :currentUserID
-        ) AS hasLiked,
-        EXISTS (
-            SELECT 1 FROM dislikes d 
-            WHERE d.materialID = m.materialID AND d.userID = :currentUserID
-        ) AS hasDisliked,
-        (
-            SELECT COUNT(*) FROM comentarii cm 
-            WHERE cm.materialID = m.materialID
-        ) AS commentCount
-    FROM materiale m
-    JOIN users u ON m.userID = u.userID
-    JOIN categorii c ON m.categorieID = c.categorieID
-    ORDER BY m.dataPostarii DESC
-    LIMIT 10
-');
+        $isLoggedIn = isset($_SESSION['userID']) && is_numeric($_SESSION['userID']) && $_SESSION['userID'] > 0;
+        $sql = '
+            SELECT 
+                m.*, 
+                u.username AS username, 
+                u.pozaProfil, 
+                c.nume';
 
-        $cerereSQL->execute(['currentUserID' => $_SESSION['userID']]);
+        if ($isLoggedIn) {
+            $sql .= ',
+                EXISTS (
+                    SELECT 1 FROM likes l 
+                    WHERE l.materialID = m.materialID AND l.userID = :currentUserID
+                ) AS hasLiked,
+                EXISTS (
+                    SELECT 1 FROM dislikes d 
+                    WHERE d.materialID = m.materialID AND d.userID = :currentUserID
+                ) AS hasDisliked';
+        } else {
+            $sql .= ',
+                false AS hasLiked,
+                false AS hasDisliked';
+        }
+
+        $sql .= ',
+                (
+                    SELECT COUNT(*) FROM comentarii cm 
+                    WHERE cm.materialID = m.materialID
+                ) AS commentCount
+            FROM materiale m
+            JOIN users u ON m.userID = u.userID
+            JOIN categorii c ON m.categorieID = c.categorieID
+            ORDER BY m.dataPostarii DESC
+            LIMIT 10';
+
+        $cerereSQL = $conexiune->prepare($sql);
+        $params = $isLoggedIn ? ['currentUserID' => $_SESSION['userID']] : [];
+        $cerereSQL->execute($params);
 
         while ($rand = $cerereSQL->fetch(PDO::FETCH_ASSOC)) {
             echo '
@@ -81,41 +89,61 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
                     </div>';
 
             if (!empty($rand["material"])) {
-                $filePath = 'uploads/' . htmlspecialchars($rand["username"]) . '/' . htmlspecialchars($rand["material"]);
-                $fileExt = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+                if ($isLoggedIn) {
+                    $filePath = 'uploads/' . htmlspecialchars($rand["username"]) . '/' . htmlspecialchars($rand["material"]);
+                    $fileExt = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
 
-                echo '<div class="material-preview">';
-                if (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif'])) {
-                    echo '<img src="' . $filePath . '" alt="Material Image">';
-                } elseif ($fileExt === 'pdf') {
-                    echo '<embed src="' . $filePath . '" type="application/pdf" width="100%" height="400px">';
-                } elseif (in_array($fileExt, ['mp4', 'webm'])) {
-                    echo '<video controls width="100%">
+                    echo '<div class="material-preview">';
+                    if (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif'])) {
+                        echo '<img src="' . $filePath . '" alt="Material Image">';
+                    } elseif ($fileExt === 'pdf') {
+                        echo '<embed src="' . $filePath . '" type="application/pdf" width="100%" height="400px">';
+                    } elseif (in_array($fileExt, ['mp4', 'webm'])) {
+                        echo '<video controls width="100%">
                             <source src="' . $filePath . '" type="video/' . $fileExt . '">
                         </video>';
+                    } else {
+                        echo '<a class="download-link" href="' . $filePath . '" download>' . htmlspecialchars($rand["material"]) . ' (' . strtoupper($fileExt) . ')</a>';
+                    }
+                    echo '</div>';
                 } else {
-                    echo '<a class="download-link" href="' . $filePath . '" download>' . htmlspecialchars($rand["material"]) . ' (' . strtoupper($fileExt) . ')</a>';
+                    $filePath = 'uploads/' . htmlspecialchars($rand["username"]) . '/' . htmlspecialchars($rand["material"]);
+                    $fileExt = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+                    echo '<div class="material-preview">';
+                    if (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif'])) {
+                        echo '<img src="' . $filePath . '" alt="Material Image">';
+                    } elseif ($fileExt === 'pdf') {
+                        echo '<embed src="' . $filePath . '" type="application/pdf" width="100%" height="400px">';
+                    } elseif (in_array($fileExt, ['mp4', 'webm'])) {
+                        echo '<video controls width="100%">
+                            <source src="' . $filePath . '" type="video/' . $fileExt . '">
+                        </video>';
+                    } else {
+                        echo '<a class="download-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">' . htmlspecialchars($rand["material"]) . ' (' . strtoupper($fileExt) . ')</a>';
+                    }
+                    echo '</div>';
                 }
             }
 
-            // Get like count
+            // Likes & Dislikes
             $stmt = $conexiune->prepare("SELECT COUNT(*) FROM likes WHERE materialID = ?");
             $stmt->execute([$rand['materialID']]);
             $likeCount = $stmt->fetchColumn();
 
-            // Get dislike count
             $stmt = $conexiune->prepare("SELECT COUNT(*) FROM dislikes WHERE materialID = ?");
             $stmt->execute([$rand['materialID']]);
             $dislikeCount = $stmt->fetchColumn();
 
-            $likeActive = $rand["hasLiked"] ? 'active' : '';
-            $dislikeActive = $rand["hasDisliked"] ? 'active' : '';
+            echo '<div class="post-actions">';
 
-            $likeIcon = $rand["hasLiked"] ? 'bi-hand-thumbs-up-fill' : 'bi-hand-thumbs-up';
-            $dislikeIcon = $rand["hasDisliked"] ? 'bi-hand-thumbs-down-fill' : 'bi-hand-thumbs-down';
+            if ($isLoggedIn) {
+                $likeActive = $rand["hasLiked"] ? 'active' : '';
+                $dislikeActive = $rand["hasDisliked"] ? 'active' : '';
+                $likeIcon = $rand["hasLiked"] ? 'bi-hand-thumbs-up-fill' : 'bi-hand-thumbs-up';
+                $dislikeIcon = $rand["hasDisliked"] ? 'bi-hand-thumbs-down-fill' : 'bi-hand-thumbs-down';
 
-            echo '</div>
-                <div class="post-actions">
+                echo '
                     <button class="reaction-btn like ' . $likeActive . '" data-id="' . $rand['materialID'] . '" data-reaction="like" title="Like">
                         <i class="bi ' . $likeIcon . '"></i>
                         <span class="like-count" id="like-count-' . $rand['materialID'] . '">' . $likeCount . '</span>
@@ -127,14 +155,54 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
                     <button class="reaction-btn comment" data-id="' . $rand['materialID'] . '" title="Comments">
                         <i class="bi bi-chat-left-text"></i>
                         <span class="comment-count" id="comment-count-' . $rand['materialID'] . '">' . $rand['commentCount'] . '</span>
+                    </button>';
+            } else {
+
+                $likeIcon = $rand["hasLiked"] ? 'bi-hand-thumbs-up-fill' : 'bi-hand-thumbs-up';
+                $dislikeIcon = $rand["hasDisliked"] ? 'bi-hand-thumbs-down-fill' : 'bi-hand-thumbs-down';
+
+                $modalTrigger = $isLoggedIn ? '' : ' data-bs-toggle="modal" data-bs-target="#loginModal"';
+
+                echo '
+                    <button class="reaction-btn-logged-out like ' . ($rand["hasLiked"] ? 'active' : '') . '" data-id="' . $rand['materialID'] . '" data-reaction="like" title="Like"' . $modalTrigger . '>
+                        <i class="bi ' . $likeIcon . '"></i>
+                        <span class="like-count" id="like-count-' . $rand['materialID'] . '">' . $likeCount . '</span>
                     </button>
-                </div>
-            </div>';
+                    <button class="reaction-btn-logged-out dislike ' . ($rand["hasDisliked"] ? 'active' : '') . '" data-id="' . $rand['materialID'] . '" data-reaction="dislike" title="Dislike"' . $modalTrigger . '>
+                        <i class="bi ' . $dislikeIcon . '"></i>
+                        <span class="dislike-count" id="dislike-count-' . $rand['materialID'] . '">' . $dislikeCount . '</span>
+                    </button>
+                    <button class="reaction-btn-logged-out comment" data-id="' . $rand['materialID'] . '" title="Comments"' . $modalTrigger . '>
+                        <i class="bi bi-chat-left-text"></i>
+                        <span class="comment-count" id="comment-count-' . $rand['materialID'] . '">' . $rand['commentCount'] . '</span>
+                    </button>
+                </div>';
+            }
+
+            echo '</div></div>';
         }
     } catch (PDOException $e) {
         exit("Eroare la afișarea datelor din baza de date.<br/>" . $e->getMessage() . "<br/>");
     }
     ?>
+
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Join to interact</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Please <a href="signup.php">sign up</a> or <a href="login.php">log in</a> to like, comment, or dislike posts.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script type="text/javascript" src="assets/actiuni.js"></script>
 
