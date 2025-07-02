@@ -35,3 +35,27 @@ function url()
         $_SERVER['SERVER_NAME'] . '/LearnSphere'
     );
 }
+
+function Data($dateString) {
+    $months = [
+        'January' => 'Ianuarie',
+        'February' => 'Februarie',
+        'March' => 'Martie',
+        'April' => 'Aprilie',
+        'May' => 'Mai',
+        'June' => 'Iunie',
+        'July' => 'Iulie',
+        'August' => 'August',
+        'September' => 'Septembrie',
+        'October' => 'Octombrie',
+        'November' => 'Noiembrie',
+        'December' => 'Decembrie'
+    ];
+
+    $timestamp = strtotime($dateString);
+    $englishMonth = date('F', $timestamp);
+    $romanianMonth = $months[$englishMonth];
+
+    return date('d ', $timestamp) . $romanianMonth . date(' Y, H:i', $timestamp);
+}
+
