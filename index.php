@@ -61,9 +61,9 @@ if ($_SESSION["rol"] == NULL) {
         }
 
         $sql .= ',
-    (
-        SELECT COUNT(*) FROM comentarii cm 
-        WHERE cm.materialID = m.materialID
+        (
+            SELECT COUNT(*) FROM comentarii cm 
+            WHERE cm.materialID = m.materialID
         ) AS commentCount
         FROM materiale m
         JOIN users u ON m.userID = u.userID
