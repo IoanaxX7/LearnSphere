@@ -25,8 +25,8 @@ file_exists(__DIR__ . "/config.php") ?
             <div class="form-value">
                 <form action="actiuni/login_process.php" method="post">
                     <div class="buttons">
-                        <button type="button" class="btn-title" onclick="location.href='signin.php'">Sign Up</button>
-                        <button type="button" class="btn-title active" onclick="location.href='login.php'">Log in</button>
+                        <button type="button" class="btn-title" onclick="location.href='signin.php'">Înregistrare</button>
+                        <button type="button" class="btn-title active" onclick="location.href='login.php'">Autentificare</button>
                     </div>
                     <div class="inputbox">
                         <label for="username">Nume utilizator:</label>
@@ -39,7 +39,7 @@ file_exists(__DIR__ . "/config.php") ?
                     <div class="forgot-password">
                         <a href="password_reset.php">Ai uitat parola?</a>
                     </div>
-                    <button class="form-btn">Log in</button>
+                    <button class="form-btn">Autentificare</button>
                 </form>
             </div>
         </div>
