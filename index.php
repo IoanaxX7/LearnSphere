@@ -6,6 +6,10 @@ if (!file_exists(__DIR__ . "/config.php")) {
 
 require_once(__DIR__ . "/config.php");
 
+if ($_SESSION["rol"] == NULL) {
+    $_SESSION["rol"] = 3;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -31,11 +35,14 @@ require_once(__DIR__ . "/config.php");
     try {
         $isLoggedIn = isset($_SESSION['userID']) && is_numeric($_SESSION['userID']) && $_SESSION['userID'] > 0;
         $sql = '
-            SELECT 
-                m.*, 
-                u.username AS username, 
-                u.pozaProfil, 
-                c.nume';
+    SELECT 
+        m.*, 
+        u.username AS username, 
+        u.pozaProfil, 
+        c.nume AS categorieNume,
+        mt.nume AS materieNume';
+
+
 
         if ($isLoggedIn) {
             $sql .= ',
@@ -54,15 +61,18 @@ require_once(__DIR__ . "/config.php");
         }
 
         $sql .= ',
-                (
-                    SELECT COUNT(*) FROM comentarii cm 
-                    WHERE cm.materialID = m.materialID
-                ) AS commentCount
-            FROM materiale m
-            JOIN users u ON m.userID = u.userID
-            JOIN categorii c ON m.categorieID = c.categorieID
-            ORDER BY m.dataPostarii DESC
-            LIMIT 10';
+    (
+        SELECT COUNT(*) FROM comentarii cm 
+        WHERE cm.materialID = m.materialID
+        ) AS commentCount
+        FROM materiale m
+        JOIN users u ON m.userID = u.userID
+        JOIN categorii c ON m.categorieID = c.categorieID
+        JOIN materii mt ON c.materieID = mt.materiiID
+        ORDER BY m.dataPostarii DESC
+        LIMIT 10';
+
+
 
         $cerereSQL = $conexiune->prepare($sql);
         $params = $isLoggedIn ? ['currentUserID' => $_SESSION['userID']] : [];
@@ -73,18 +83,18 @@ require_once(__DIR__ . "/config.php");
                 <div class="post">
                     <div class="post-header">
                         <div class="profile-pic">
-                            <img src="uploads/' . htmlspecialchars($rand["username"]) . '/' . htmlspecialchars($rand["pozaProfil"]) . '" alt="Profile picture of ' . htmlspecialchars($rand["username"]) . '">
+                            <img src="uploads/' . htmlspecialchars($rand["username"]) . '/' . htmlspecialchars($rand["pozaProfil"]) . '" alt="Poza de profil a lui ' . htmlspecialchars($rand["username"]) . '">
                         </div>
                         <div class="user-info">
                             <span class="username">' . htmlspecialchars($rand["username"]) . '</span>
-                            <span class="time">' . date("d M Y, H:i", strtotime($rand["dataPostarii"])) . '</span>
+                            <span class="time">' . Data($rand["dataPostarii"]) . '</span>
                         </div>
                     </div>
                     <div class="post-content">
                         <a href="postari/postare_material.php?id=' . $rand['materialID'] . '">
                             <h4>' . htmlspecialchars($rand["titlu"]) . '</h4>
                         </a>
-                        <h6 class="category">' . htmlspecialchars($rand["nume"]) . '</h6>
+                        <h6 class="category">' . htmlspecialchars($rand["categorieNume"]) . ' • ' . htmlspecialchars($rand["materieNume"]) . '</h6>
                         <p>' . nl2br(htmlspecialchars($rand["descriere"])) . '</p>
                     </div>';
 
@@ -189,20 +199,21 @@ require_once(__DIR__ . "/config.php");
 
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Join to interact</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header rounded-top-4">
+                    <h5 class="modal-title" id="loginModalLabel">Conectează-te pentru a interacționa</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Închide"></button>
                 </div>
-                <div class="modal-body">
-                    Please <a href="signup.php">sign up</a> or <a href="login.php">log in</a> to like, comment, or dislike posts.
+                <div class="modal-body text-center">
+                    <p class="mb-3">Te rugăm să <a href="signin.php" class="text-decoration-none fw-bold">te înregistrezi</a> sau să <a href="login.php" class="text-decoration-none fw-bold">te conectezi</a> pentru a aprecia, comenta sau respinge postările.</p>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Închide</button>
                 </div>
             </div>
         </div>
     </div>
+
 
     <script type="text/javascript" src="assets/actiuni.js"></script>
 
