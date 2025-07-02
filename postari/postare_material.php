@@ -7,11 +7,12 @@ if (!file_exists(__DIR__ . "/../config.php")) {
 require_once(__DIR__ . "/../config.php");
 
 if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
-    header("Location: logout.php");
-    exit();
+    $_SESSION["rol"] = 3;
+    $_SESSION["userID"] = 0;
 }
 
-$userID = $_SESSION['userID'];
+$currentUserID  = $_SESSION['userID'];
+
 ?>
 
 <!DOCTYPE html>
@@ -60,9 +61,11 @@ $userID = $_SESSION['userID'];
         ');
 
         $stmt->execute([
-            ':currentUserID' => $_SESSION['userID'],
+            ':currentUserID' => $currentUserID,
             ':materialID' => $materialID
         ]);
+
+
 
         $material = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -95,8 +98,10 @@ $userID = $_SESSION['userID'];
                 echo '<embed src="' . $filePath . '" type="application/pdf" width="100%" height="400px">';
             } elseif (in_array($ext, ['mp4', 'webm'])) {
                 echo '<video controls width="100%"><source src="' . $filePath . '" type="video/' . $ext . '"></video>';
-            } else {
+            } elseif ($currentUserID) {
                 echo '<a class="download-link" href="' . $filePath . '" download>' . htmlspecialchars($material["material"]) . ' (' . strtoupper($ext) . ')</a>';
+            } else {
+                echo '<a class="download-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">' . htmlspecialchars($material["material"]) . ' (' . strtoupper($ext) . ')</a>';
             }
             echo '</div>';
         }
@@ -117,23 +122,43 @@ $userID = $_SESSION['userID'];
         $likeIcon = $material["hasLiked"] ? 'bi-hand-thumbs-up-fill' : 'bi-hand-thumbs-up';
         $dislikeIcon = $material["hasDisliked"] ? 'bi-hand-thumbs-down-fill' : 'bi-hand-thumbs-down';
 
-        echo '</div>
-            <div class="post-actions">
-                <button data-type="material" class="reaction-btn like ' . $likeActive . '" data-id="' . $material['materialID'] . '" data-reaction="like" title="Like">
-                    <i class="bi ' . $likeIcon . '"></i>
-                    <span class="like-count" id="like-count-' . $material['materialID'] . '">' . $likeCount . '</span>
-                </button>
-                <button  data-type="material" class="reaction-btn dislike ' . $dislikeActive . '" data-id="' . $material['materialID'] . '" data-reaction="dislike" title="Dislike">
-                    <i class="bi ' . $dislikeIcon . '"></i>
-                    <span class="dislike-count" id="dislike-count-' . $material['materialID'] . '">' . $dislikeCount . '</span>
-                </button>
-                <button data-type="material" class="reaction-btn comment" data-id="' . $material['materialID'] . '" title="Comments">
-                    <i class="bi bi-chat-left-text"></i>
-                    <span class="comment-count" id="comment-count-' . $material['materialID'] . '">' . $material['commentCount'] . '</span>
-                </button>
-            </div>
-        </div>
-    </div>';
+        if ($currentUserID) {
+            echo '</div>
+                <div class="post-actions">
+                    <button data-type="material" class="reaction-btn like ' . $likeActive . '" data-id="' . $material['materialID'] . '" data-reaction="like" title="Like">
+                        <i class="bi ' . $likeIcon . '"></i>
+                        <span class="like-count" id="like-count-' . $material['materialID'] . '">' . $likeCount . '</span>
+                    </button>
+                    <button  data-type="material" class="reaction-btn dislike ' . $dislikeActive . '" data-id="' . $material['materialID'] . '" data-reaction="dislike" title="Dislike">
+                        <i class="bi ' . $dislikeIcon . '"></i>
+                        <span class="dislike-count" id="dislike-count-' . $material['materialID'] . '">' . $dislikeCount . '</span>
+                    </button>
+                    <button data-type="material" class="reaction-btn comment" data-id="' . $material['materialID'] . '" title="Comments">
+                        <i class="bi bi-chat-left-text"></i>
+                        <span class="comment-count" id="comment-count-' . $material['materialID'] . '">' . $material['commentCount'] . '</span>
+                    </button>
+                </div>
+            </div>';
+        } else {
+            echo '</div>
+                <div class="post-actions">
+                    <button data-type="material" class="reaction-btn like ' . $likeActive . '" data-bs-toggle="modal" data-bs-target="#loginModal" title="Like">
+                        <i class="bi ' . $likeIcon . '"></i>
+                        <span class="like-count" id="like-count-' . $material['materialID'] . '">' . $likeCount . '</span>
+                    </button>
+                    <button  data-type="material" class="reaction-btn dislike ' . $dislikeActive . '" data-bs-toggle="modal" data-bs-target="#loginModal" title="Dislike">
+                        <i class="bi ' . $dislikeIcon . '"></i>
+                        <span class="dislike-count" id="dislike-count-' . $material['materialID'] . '">' . $dislikeCount . '</span>
+                    </button>
+                    <button data-type="material" class="reaction-btn comment" data-bs-toggle="modal" data-bs-target="#loginModal" title="Comments">
+                        <i class="bi bi-chat-left-text"></i>
+                        <span class="comment-count" id="comment-count-' . $material['materialID'] . '">' . $material['commentCount'] . '</span>
+                    </button>
+                </div>
+            </div>';
+        }
+
+        echo '</div>';
     } catch (PDOException $e) {
         exit("Eroare la afișarea datelor din baza de date.<br/>" . $e->getMessage() . "<br/>");
     }
@@ -147,15 +172,18 @@ $userID = $_SESSION['userID'];
     // Comments section
 
     echo '<div class="comments-container">
-    <h3>Comentarii</h3>
-    <form id="comment-form" class="comment-form">
+    <h3>Comentarii</h3>';
+
+    if ($currentUserID !== 0) {
+        echo '<form id="comment-form" class="comment-form">
         <input type="hidden" name="materialID" id="materialID" value="' . $materialID . '">
         <textarea maxlength="255" name="comentariu" id="comentariu" required placeholder="Adaugă un comentariu..."></textarea>
         <button type="submit">Trimite</button>
     </form>
     <div class="comments">';
-
-    // Presupun că $materialID este definit corect și reprezintă ID-ul materialului curent
+    } else {
+        echo '<p><a href="../login.php" class="text-decoration-none fw-bold">Autentifică-te</a> pentru a comenta.</p>';
+    }
 
     $stmtComments = $conexiune->prepare('
     SELECT cm.*, u.username, u.pozaProfil,
@@ -168,8 +196,8 @@ $userID = $_SESSION['userID'];
     WHERE cm.materialID = :materialID
     ORDER BY cm.dataPostarii DESC
 ');
-$stmtComments->execute([':materialID' => $materialID, ':currentUserID' => $_SESSION['userID']]);
-$comentarii = $stmtComments->fetchAll(PDO::FETCH_ASSOC);
+    $stmtComments->execute([':materialID' => $materialID, ':currentUserID' => $_SESSION['userID']]);
+    $comentarii = $stmtComments->fetchAll(PDO::FETCH_ASSOC);
 
 
     foreach ($comentarii as $comentariu) {
@@ -199,20 +227,51 @@ $comentarii = $stmtComments->fetchAll(PDO::FETCH_ASSOC);
         $likeIcon = $comentariu["hasLiked"] ? 'bi-hand-thumbs-up-fill' : 'bi-hand-thumbs-up';
         $dislikeIcon = $comentariu["hasDisliked"] ? 'bi-hand-thumbs-down-fill' : 'bi-hand-thumbs-down';
 
-        echo '
-            <div class="post-actions">
-                <button data-type="comment" class="reaction-btn like ' . $likeActive . '" data-id="' . $comentariu['comentariuID'] . '" data-reaction="like" title="Like">
-                    <i class="bi ' . $likeIcon . '"></i>
-                    <span class="like-count" id="like-count-' . $comentariu['comentariuID'] . '">' . $likeCount . '</span>
-                </button>
-                <button data-type="comment" class="reaction-btn dislike ' . $dislikeActive . '" data-id="' . $comentariu['comentariuID'] . '" data-reaction="dislike" title="Dislike">
-                    <i class="bi ' . $dislikeIcon . '"></i>
-                    <span class="dislike-count" id="dislike-count-' . $comentariu['comentariuID'] . '">' . $dislikeCount . '</span>
-                </button>
-            </div>
-    </div>';
+        if ($currentUserID) {
+            echo '
+                <div class="post-actions">
+                    <button data-type="comment" class="reaction-btn like ' . $likeActive . '" data-id="' . $comentariu['comentariuID'] . '" data-reaction="like" title="Like">
+                        <i class="bi ' . $likeIcon . '"></i>
+                        <span class="like-count" id="like-count-' . $comentariu['comentariuID'] . '">' . $likeCount . '</span>
+                    </button>
+                    <button data-type="comment" class="reaction-btn dislike ' . $dislikeActive . '" data-id="' . $comentariu['comentariuID'] . '" data-reaction="dislike" title="Dislike">
+                        <i class="bi ' . $dislikeIcon . '"></i>
+                        <span class="dislike-count" id="dislike-count-' . $comentariu['comentariuID'] . '">' . $dislikeCount . '</span>
+                    </button>
+                </div>';
+        } else {
+             echo '
+                <div class="post-actions">
+                    <button data-type="comment" class="reaction-btn like ' . $likeActive . '" data-bs-toggle="modal" data-bs-target="#loginModal" title="Like">
+                        <i class="bi ' . $likeIcon . '"></i>
+                        <span class="like-count" id="like-count-' . $comentariu['comentariuID'] . '">' . $likeCount . '</span>
+                    </button>
+                    <button data-type="comment" class="reaction-btn dislike ' . $dislikeActive . '" data-bs-toggle="modal" data-bs-target="#loginModal" title="Dislike">
+                        <i class="bi ' . $dislikeIcon . '"></i>
+                        <span class="dislike-count" id="dislike-count-' . $comentariu['comentariuID'] . '">' . $dislikeCount . '</span>
+                    </button>
+                </div>';
+        }
+        echo '</div> <hr>';
     }
     ?>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header rounded-top-4">
+                    <h5 class="modal-title" id="loginModalLabel">Conectează-te pentru a interacționa</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Închide"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-3">Te rugăm să <a href="../signin.php" class="text-decoration-none fw-bold">te înregistrezi</a> sau să <a href="../login.php" class="text-decoration-none fw-bold">te conectezi</a> pentru a aprecia, comenta sau respinge postările.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Închide</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript" src="../assets/preia_comentariu.js"></script>
 </body>
 
