@@ -28,8 +28,8 @@ file_exists(__DIR__ . "/config.php") ?
                 <form action="" method="post" id="signup">
                     <div class="signin-body">
                         <div class="buttons">
-                            <button type="button" class="btn-title active" onclick="location.href='signin.php'">Sign Up</button>
-                            <button type="button" class="btn-title" onclick="location.href='login.php'">Log in</button>
+                            <button type="button" class="btn-title active" onclick="location.href='signin.php'">Înregistrare</button>
+                            <button type="button" class="btn-title" onclick="location.href='login.php'">Autentificare</button>
                         </div>
                         <div class="inputbox">
                             <label for="nume">Nume:</label>
@@ -70,7 +70,7 @@ file_exists(__DIR__ . "/config.php") ?
                         <div id="ajutorParola2" class="form-text">
                             <span id="potrivire_parole" class="bi bi-x-lg" style="color: #FF0004;"></span>
                         </div>
-                        <button class="form-btn form-btn-signin">Sign in</button>
+                        <button class="form-btn form-btn-signin">Înregistrare</button>
                     </div>
                 </form>
             </div>
