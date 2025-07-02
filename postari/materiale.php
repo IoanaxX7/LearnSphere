@@ -5,7 +5,7 @@ if (!file_exists(__DIR__ . "/../config.php")) {
 
 require_once(__DIR__ . "/../config.php");
 
-if ($_SESSION["rol"] == NULL) {
+if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
     $_SESSION["rol"] = 3;
 }
 ?>
@@ -194,10 +194,12 @@ if ($_SESSION["rol"] == NULL) {
                         <i class="bi ' . $dislikeIcon . '"></i>
                         <span class="dislike-count" id="dislike-count-' . $rand['materialID'] . '">' . $dislikeCount . '</span>
                     </button>
-                    <button class="reaction-btn comment" data-id="' . $rand['materialID'] . '" title="Comments">
-                        <i class="bi bi-chat-left-text"></i>
-                        <span class="comment-count" id="comment-count-' . $rand['materialID'] . '">' . $rand['commentCount'] . '</span>
-                    </button>';
+                    <a href="../postari/postare_material.php?id=' . $rand['materialID'] . '" title="Comentarii">
+                        <button class="reaction-btn comment">
+                            <i class="bi bi-chat-left-text"></i>
+                            <span class="comment-count" id="comment-count-' . $rand['materialID'] . '">' . $rand['commentCount'] . '</span>
+                        </button>
+                    </a>';
                 } else {
 
                     $likeIcon = $rand["hasLiked"] ? 'bi-hand-thumbs-up-fill' : 'bi-hand-thumbs-up';
@@ -214,10 +216,12 @@ if ($_SESSION["rol"] == NULL) {
                         <i class="bi ' . $dislikeIcon . '"></i>
                         <span class="dislike-count" id="dislike-count-' . $rand['materialID'] . '">' . $dislikeCount . '</span>
                     </button>
-                    <button class="reaction-btn-logged-out comment" data-id="' . $rand['materialID'] . '" title="Comments"' . $modalTrigger . '>
-                        <i class="bi bi-chat-left-text"></i>
-                        <span class="comment-count" id="comment-count-' . $rand['materialID'] . '">' . $rand['commentCount'] . '</span>
-                    </button>
+                    <a href="../postari/postare_material.php?id=' . $rand['materialID'] . '" title="Comentarii">
+                        <button  class="reaction-btn-logged-out comment">
+                            <i class="bi bi-chat-left-text"></i>
+                            <span class="comment-count" id="comment-count-' . $rand['materialID'] . '">' . $rand['commentCount'] . '</span>
+                        </button>
+                    </a>
                 </div>';
                 }
 
