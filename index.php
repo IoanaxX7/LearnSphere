@@ -35,12 +35,12 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
     try {
         $isLoggedIn = isset($_SESSION['userID']) && is_numeric($_SESSION['userID']) && $_SESSION['userID'] > 0;
         $sql = '
-    SELECT 
-        m.*, 
-        u.username AS username, 
-        u.pozaProfil, 
-        c.nume AS categorieNume,
-        mt.nume AS materieNume';
+            SELECT 
+                m.*, 
+                u.username AS username, 
+                u.pozaProfil, 
+                c.nume AS categorieNume,
+                mt.nume AS materieNume';
 
 
 
