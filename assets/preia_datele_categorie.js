@@ -9,13 +9,21 @@ window.addEventListener("load", function (e) {
     "form_adauga_categorie"
   );
 
-  const nume_catgorie = document.getElementById("nume_catgorie");
-  const descriere = document.getElementById("descriere");
+  const nume_categorie = document.getElementById("nume_categorie");
+  const materie = document.getElementById("materie");
+  const descriere_categorie = document.getElementById("descriere_categorie");
 
-  nume_catgorie.addEventListener("keyup", (event) => {
-    nume_catgorie.classList.remove("is-valid", "is-invalid");
-    nume_catgorie.classList.add(
-      nume_catgorie.checkValidity() ? "is-valid" : "is-invalid"
+  nume_categorie.addEventListener("keyup", (event) => {
+    nume_categorie.classList.remove("is-valid", "is-invalid");
+    nume_categorie.classList.add(
+      nume_categorie.checkValidity() ? "is-valid" : "is-invalid"
+    );
+  });
+
+  materie.addEventListener("keyup", (event) => {
+    materie.classList.remove("is-valid", "is-invalid");
+    materie.classList.add(
+      materie.checkValidity() ? "is-valid" : "is-invalid"
     );
   });
 
@@ -25,8 +33,9 @@ window.addEventListener("load", function (e) {
       event.preventDefault();
       async function preiaDatele() {
         let date_formular = {
-          nume_categorie: nume_catgorie.value,
-          descriere: descriere.value,
+          nume_categorie: nume_categorie.value,
+          materie: materie.value,
+          descriere: descriere_categorie.value,
         };
 
         const apiUrl = "../actiuni/adauga_categorie.php";
@@ -56,27 +65,32 @@ window.addEventListener("load", function (e) {
             if (!datele.succes) {
               const mesaj = document.createElement("div");
               mesaj.className = "alert alert-danger";
-              if (datele.erori_validare.nume_catgorie) {
-                nume_catgorie.classList.remove("is-valid", "is-invalid");
-                nume_catgorie.classList.add("is-invalid");
-                mesaj.innerHTML += datele.erori_validare.nume_catgorie + "<br>";
+              if (datele.erori_validare.nume_categorie) {
+                nume_categorie.classList.remove("is-valid", "is-invalid");
+                nume_categorie.classList.add("is-invalid");
+                mesaj.innerHTML += datele.erori_validare.nume_categorie + "<br>";
+              }
+              if (datele.erori_validare.materie) {
+                materie.classList.remove("is-valid", "is-invalid");
+                materie.classList.add("is-invalid");
+                mesaj.innerHTML += datele.erori_validare.materie + "<br>";
               }
 
-              const modal_body = document.querySelector(".modal-body");
-              modal_body.insertBefore(mesaj, modal_body.firstChild);
+              const alert_categorie = document.querySelector(".alert_categorie");
+              alert_categorie.insertBefore(mesaj, alert_categorie.firstChild);
             } else {
               if (datele.mesaj_eroare_sql) {
                 const mesaj2 = document.createElement("div");
                 mesaj2.className = "alert alert-danger";
                 mesaj2.innerHTML = datele.mesaj_eroare_sql;
-                const modal_body = document.querySelector(".modal-body");
-                modal_body.insertBefore(mesaj2, modal_body.firstChild);
+                const alert_categorie = document.querySelector(".alert_categorie");
+                alert_categorie.insertBefore(mesaj2, alert_categorie.firstChild);
               } else if (datele.mesaj_succes_sql) {
                 const mesaj3 = document.createElement("div");
                 mesaj3.className = "alert alert-success";
                 mesaj3.innerHTML = datele.mesaj_succes_sql;
-                const modal_body = document.querySelector(".modal-body");
-                modal_body.insertBefore(mesaj3, modal_body.firstChild);
+                const alert_categorie = document.querySelector(".alert_categorie");
+                alert_categorie.insertBefore(mesaj3, alert_categorie.firstChild);
                 form_adauga_categorie.reset();
                 if (elemente_formular_modal_adauga_categorie) {
                   Array.from(elemente_formular_modal_adauga_categorie).forEach(
@@ -90,8 +104,8 @@ window.addEventListener("load", function (e) {
                 const mesaj = document.createElement("div");
                 mesaj.className = "alert alert-success";
                 mesaj.innerHTML = datele.succes_validare;
-                const modal_body = document.querySelector(".modal-body");
-                modal_body.insertBefore(mesaj, modal_body.firstChild);
+                const alert_categorie = document.querySelector(".alert_categorie");
+                alert_categorie.insertBefore(mesaj, alert_categorie.firstChild);
               }
             }
           } else {
@@ -99,8 +113,8 @@ window.addEventListener("load", function (e) {
             mesaj.className = "alert alert-warning";
             mesaj.innerHTML =
               "Serverul nu a returnat date. Posibil nu s-a trimis o acțiune corectă!";
-            const modal_body = document.querySelector(".modal-body");
-            modal_body.insertBefore(mesaj, modal_body.firstChild);
+            const alert_categorie = document.querySelector(".alert_categorie");
+            alert_categorie.insertBefore(mesaj, alert_categorie.firstChild);
           }
         } catch (error) {
           console.error(error);
@@ -110,8 +124,8 @@ window.addEventListener("load", function (e) {
           const mesaj = document.createElement("div");
           mesaj.className = "alert alert-danger";
           mesaj.innerHTML = error;
-          const modal_body = document.querySelector(".modal-body");
-          modal_body.insertBefore(mesaj, modal_body.firstChild);
+          const alert_categorie = document.querySelector(".alert_categorie");
+          alert_categorie.insertBefore(mesaj, alert_categorie.firstChild);
         }
       }
       preiaDatele();
