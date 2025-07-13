@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $date_iesire = [];
 
     $titlu = $_POST['titlu'] ?? null;
+    $materie = $_POST['materie_select'] ?? null;
     $categorie = $_POST['categorie'] ?? null;
     $descriere = $_POST['descriere'] ?? '';
     $cuvinte_cheie = $_POST['cuvinte_cheie'] ?? '';
@@ -16,6 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validare
     if (empty($titlu)) {
         $erori_validare['titlu'] = 'Titlul este obligatoriu.';
+    }
+
+    if (empty($materie)) {
+        $erori_validare['materie'] = 'Materia este obligatorie.';
     }
 
     if (empty($categorie)) {
@@ -60,13 +65,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
 
             if ($executat) {
-                $date_iesire['succes'] = true;
-                $date_iesire['mesaj'] = 'Materialul a fost adăugat cu succes.';
-                header('Location: ../postari/materiale.php');
+                $post_id = $conexiune->lastInsertId();
+                header("Location: ../postari/postare_material.php?id=" . $post_id);
                 exit;
             } else {
                 $date_iesire['succes'] = false;
-                $date_iesire['mesaj'] = 'Eroare la inserarea în baza de date.';
+                $date_iesire['mesaj'] = 'Eroare la crearea materialului.';
             }
         } catch (PDOException $e) {
             $date_iesire['succes'] = false;
