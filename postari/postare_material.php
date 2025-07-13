@@ -27,7 +27,7 @@ $currentUserID  = $_SESSION['userID'];
     <title>Materiale</title>
 </head>
 
-<body>
+<body style="margin-bottom: 3em;">
     <?php
     file_exists(__DIR__ . "/../module/meniu.php") ?
         require_once __DIR__ . "/../module/meniu.php" :
@@ -41,24 +41,31 @@ $currentUserID  = $_SESSION['userID'];
 
     try {
         $stmt = $conexiune->prepare('
-            SELECT m.*, u.username, u.pozaProfil, c.nume,
-            EXISTS (
-                SELECT 1 FROM likes l 
-                WHERE l.materialID = m.materialID AND l.userID = :currentUserID
-            ) AS hasLiked,
-            EXISTS (
-                SELECT 1 FROM dislikes d 
-                WHERE d.materialID = m.materialID AND d.userID = :currentUserID
-            ) AS hasDisliked,
-            (
-                SELECT COUNT(*) FROM comentarii cm 
-                WHERE cm.materialID = m.materialID
-            ) AS commentCount
-            FROM materiale m
-            JOIN users u ON m.userID = u.userID
-            JOIN categorii c ON m.categorieID = c.categorieID
-            WHERE m.materialID = :materialID
-        ');
+    SELECT m.*, 
+           u.username, 
+           u.pozaProfil, 
+           c.nume AS categorieNume, 
+           mt.nume AS numeMaterie,
+           EXISTS (
+               SELECT 1 FROM likes l 
+               WHERE l.materialID = m.materialID AND l.userID = :currentUserID
+           ) AS hasLiked,
+           EXISTS (
+               SELECT 1 FROM dislikes d 
+               WHERE d.materialID = m.materialID AND d.userID = :currentUserID
+           ) AS hasDisliked,
+           (
+               SELECT COUNT(*) FROM comentarii cm 
+               WHERE cm.materialID = m.materialID
+           ) AS commentCount
+    FROM materiale m
+    JOIN users u ON m.userID = u.userID
+    JOIN categorii c ON m.categorieID = c.categorieID
+    JOIN materii mt ON c.materieID = mt.materiiID
+    WHERE m.materialID = :materialID
+');
+
+
 
         $stmt->execute([
             ':currentUserID' => $currentUserID,
@@ -79,13 +86,13 @@ $currentUserID  = $_SESSION['userID'];
             <img src="../uploads/' . htmlspecialchars($material["username"]) . '/' . htmlspecialchars($material["pozaProfil"]) . '" class="profile-pic">
             <div class="user-info">
                 <span class="username">' . htmlspecialchars($material["username"]) . '</span>
-                <span class="time">' . date("d M Y, H:i", strtotime($material["dataPostarii"])) . '</span>
+                <span class="time">' . Data($material["dataPostarii"]) . '</span>
             </div>
         </div>
 
         <div class="post-content">
             <h2>' . htmlspecialchars($material["titlu"]) . '</h2>
-            <h6>' . htmlspecialchars($material["nume"]) . '</h6>
+            <h6 class="category">' . htmlspecialchars($material["categorieNume"]) . ' • ' . htmlspecialchars($material["numeMaterie"]) . '</h6>
             <p>' . nl2br(htmlspecialchars($material["descriere"])) . '</p>';
 
         if (!empty($material["material"])) {
@@ -169,7 +176,7 @@ $currentUserID  = $_SESSION['userID'];
 
     <?php
 
-    // Comments section
+    // Comentarii
 
     echo '<div class="comments-container">
     <h3>Comentarii</h3>';
@@ -240,7 +247,7 @@ $currentUserID  = $_SESSION['userID'];
                     </button>
                 </div>';
         } else {
-             echo '
+            echo '
                 <div class="post-actions">
                     <button data-type="comment" class="reaction-btn like ' . $likeActive . '" data-bs-toggle="modal" data-bs-target="#loginModal" title="Like">
                         <i class="bi ' . $likeIcon . '"></i>
@@ -252,9 +259,10 @@ $currentUserID  = $_SESSION['userID'];
                     </button>
                 </div>';
         }
-        echo '</div> <hr>';
+        echo '</div>';
     }
     ?>
+
 
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
