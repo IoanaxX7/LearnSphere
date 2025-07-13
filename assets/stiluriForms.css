@@ -144,7 +144,7 @@
   padding-bottom: 0.5em;
 }
 
-.categorii{
+.categorii {
   border: none;
   background: transparent;
   appearance: none;
@@ -152,44 +152,50 @@
   -moz-appearance: none;
 }
 
-.adauga-categorie {
+.link-modal {
   margin-top: -1.5em;
   margin-bottom: -1em;
 }
 
-.adauga-categorie a{
+.link-modal a {
   font-size: 0.9rem;
   color: var(--txt);
   text-decoration: none;
 }
 
-.adauga-categorie a:hover{
+.link-modal a:hover {
   text-decoration: underline;
 }
 
-.form-intrebare{
+.form-intrebare {
   margin-top: -1.5em;
 }
 
-.form-profil{
+.form-profil {
   padding-left: 2em;
   padding-right: 2em;
   width: 35em;
 }
 
-.poza_profil{
-  margin-top: .5em;
+.poza_profil {
+  margin-top: 0.5em;
 }
 
-.form-btn-delete{
-  margin-top: .5em;
+.form-btn-delete {
+  margin-top: 0.5em;
 }
 
 /* .form-cauta-categorie{
  margin-top: -20em;
 } */
 
-.cauta-categorie{
+.cauta-categorie {
   padding-left: 1.5em;
   padding-right: 1.5em;
+}
+
+.moadal-select {
+  margin-left: 0.75em;
+  margin-top: 0.30em;
+  width: 29.1em;
 }
