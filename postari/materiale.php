@@ -23,7 +23,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
     <link rel="stylesheet" href="../assets/stiluriForms.css">
 </head>
 
-<body>
+<body style="margin-top: -3em;">
     <?php
     file_exists(__DIR__ . "/../module/meniu.php") ?
         require_once __DIR__ . "/../module/meniu.php" :
