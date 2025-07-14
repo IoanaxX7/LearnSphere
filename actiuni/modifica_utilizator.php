@@ -4,28 +4,21 @@ header('Content-Type: application/json');
 
 $rawInput = file_get_contents("php://input");
 
-// TEMPORARY DEBUGGING — log to a file
 file_put_contents("debug_log.txt", $rawInput);
 
 $date_intrare = json_decode($rawInput, true);
 
 if (!$date_intrare) {
-    echo json_encode(["error" => "JSON decoding failed or input empty.", "raw_input" => $inputJSON]);
+    echo json_encode([
+        "error" => "JSON decoding failed or input empty.",
+        "raw_input" => $rawInput,
+        "json_last_error" => json_last_error_msg()
+    ]);
     exit;
 }
 
 if (!isset($date_intrare['userId'])) {
     echo json_encode(["error" => "Missing userId in input.", "input" => $date_intrare]);
-    exit;
-}
-
-
-
-// Read JSON from fetch body
-$date_intrare = json_decode(file_get_contents("php://input"), true);
-
-if (!$date_intrare || !isset($date_intrare['userID'])) {
-    echo json_encode(["error" => "Datele nu au fost primite corect."]);
     exit;
 }
 
@@ -40,7 +33,6 @@ $parola1 = $date_intrare['parola1'];
 $parola2 = $date_intrare['parola2'];
 
 try {
-    // Check for username conflict
     $sql1 = "SELECT COUNT(*) FROM users WHERE username = :nume_utilizator AND userID <> :id";
     $cerereSQL1 = $conexiune->prepare($sql1);
     $cerereSQL1->execute([":nume_utilizator" => $nume_utilizator, ":id" => $id]);
@@ -51,7 +43,6 @@ try {
         exit;
     }
 
-    // Update user data
     $sql2 = "UPDATE users SET username=:nume_utilizator, rol=:rol, nume=:nume, prenume=:prenume, email=:email, dataNasterii=:dataNasterii WHERE userID=:id";
     $cerereSQL2 = $conexiune->prepare($sql2);
     $cerereSQL2->execute([
@@ -65,8 +56,7 @@ try {
     ]);
 
     $mesaj = "Datele au fost actualizate.";
-
-    // Update password if needed
+    
     if (!empty($parola1)) {
         if ($parola1 !== $parola2) {
             echo json_encode(["error" => "Parolele nu se potrivesc."]);
@@ -89,7 +79,7 @@ try {
             ":id" => $id
         ]);
 
-        $mesaj = " Parola a fost schimbată.";
+        $mesaj .= " Parola a fost schimbată.";
     }
 
     echo json_encode(["success" => $mesaj]);
