@@ -3,12 +3,11 @@ window.addEventListener("load", function (e) {
   const modal_adauga_utilizator = document.getElementById(
     "modal_adauga_utilizator"
   );
-  const elemente_formular_modal_adauga_utilizator = document.getElementById(
-    "modal_adauga_utilizator"
-  ).elements;
   const form_adauga_utilizator = document.getElementById(
     "form_adauga_utilizator"
-  ).elements;
+  );
+  const elemente_formular_modal_adauga_utilizator =
+    form_adauga_utilizator.elements;
 
   const rol = document.getElementById("rol");
   const nume = document.getElementById("nume");
@@ -26,7 +25,7 @@ window.addEventListener("load", function (e) {
     );
   });
 
-  modal_adauga_utilizator.addEventListener(
+  form_adauga_utilizator.addEventListener(
     "submit",
     (event) => {
       event.preventDefault();
@@ -53,7 +52,6 @@ window.addEventListener("load", function (e) {
             },
             body: JSON.stringify(date_formular),
           });
-          console.log(raspuns);
 
           if (!raspuns.ok) {
             throw new Error(`HTTP error! Status: ${raspuns.status}`);
@@ -61,17 +59,19 @@ window.addEventListener("load", function (e) {
 
           const datele = await raspuns.json();
 
-          while (document.contains(document.querySelector(".alert"))) {
-            document.querySelector(".alert").remove();
-          }
+          const alert_adauga_utilizator = document.querySelector(
+            ".alert_adauga_utilizator"
+          );
+          alert_adauga_utilizator.innerHTML = ""; // Clear old messages
 
           if (JSON.stringify(datele) !== "[]") {
             if (!datele.succes) {
               const mesaj = document.createElement("div");
               mesaj.className = "alert alert-danger";
+
               if (datele.erori_validare.rol) {
-                nume.classList.remove("is-valid", "is-invalid");
-                nume.classList.add("is-invalid");
+                rol.classList.remove("is-valid", "is-invalid");
+                rol.classList.add("is-invalid");
                 mesaj.innerHTML += datele.erori_validare.rol + "<br>";
               }
               if (datele.erori_validare.nume) {
@@ -103,28 +103,27 @@ window.addEventListener("load", function (e) {
               if (datele.erori_validare.parola1) {
                 parola1.classList.remove("is-valid", "is-invalid");
                 parola1.classList.add("is-invalid");
-                mesaj.innerHTML += datele.erori_validare.parola1;
+                mesaj.innerHTML += datele.erori_validare.parola1 + "<br>";
               }
               if (datele.erori_validare.parola2) {
                 parola2.classList.remove("is-valid", "is-invalid");
                 parola2.classList.add("is-invalid");
-                mesaj.innerHTML += datele.erori_validare.parola2;
+                mesaj.innerHTML += datele.erori_validare.parola2 + "<br>";
               }
-              const modal_body = document.querySelector(".modal-body");
-              modal_body.insertBefore(mesaj, modal_body.firstChild);
+
+              alert_adauga_utilizator.appendChild(mesaj);
             } else {
               if (datele.mesaj_eroare_sql) {
                 const mesaj2 = document.createElement("div");
                 mesaj2.className = "alert alert-danger";
                 mesaj2.innerHTML = datele.mesaj_eroare_sql;
-                const modal_body = document.querySelector(".modal-body");
-                modal_body.insertBefore(mesaj2, modal_body.firstChild);
+                alert_adauga_utilizator.appendChild(mesaj2);
               } else if (datele.mesaj_succes_sql) {
                 const mesaj3 = document.createElement("div");
                 mesaj3.className = "alert alert-success";
                 mesaj3.innerHTML = datele.mesaj_succes_sql;
-                const modal_body = document.querySelector(".modal-body");
-                modal_body.insertBefore(mesaj3, modal_body.firstChild);
+                alert_adauga_utilizator.appendChild(mesaj3);
+
                 form_adauga_utilizator.reset();
                 Array.from(elemente_formular_modal_adauga_utilizator).forEach(
                   (element_formular_modal_adauga_utilizator) => {
@@ -135,12 +134,12 @@ window.addEventListener("load", function (e) {
                   }
                 );
               }
+
               if (datele.succes_validare) {
                 const mesaj = document.createElement("div");
                 mesaj.className = "alert alert-success";
                 mesaj.innerHTML = datele.succes_validare;
-                const modal_body = document.querySelector(".modal-body");
-                modal_body.insertBefore(mesaj, modal_body.firstChild);
+                alert_adauga_utilizator.appendChild(mesaj);
               }
             }
           } else {
@@ -148,19 +147,18 @@ window.addEventListener("load", function (e) {
             mesaj.className = "alert alert-warning";
             mesaj.innerHTML =
               "Serverul nu a returnat date. Posibil nu s-a trimis o acțiune corectă!";
-            const modal_body = document.querySelector(".modal-body");
-            modal_body.insertBefore(mesaj, modal_body.firstChild);
+            alert_adauga_utilizator.appendChild(mesaj);
           }
         } catch (error) {
           console.error(error);
-          while (document.contains(document.querySelector(".alert"))) {
-            document.querySelector(".alert").remove();
-          }
+          const alert_adauga_utilizator = document.querySelector(
+            ".alert_adauga_utilizator"
+          );
+          alert_adauga_utilizator.innerHTML = "";
           const mesaj = document.createElement("div");
           mesaj.className = "alert alert-danger";
           mesaj.innerHTML = error;
-          const modal_body = document.querySelector(".modal-body");
-          modal_body.insertBefore(mesaj, modal_body.firstChild);
+          alert_adauga_utilizator.appendChild(mesaj);
         }
       }
       preiaDatele();
@@ -208,11 +206,10 @@ window.addEventListener("load", function (e) {
   const edit_data_nasterii = document.getElementById("modifica_data_nasterii");
   const edit_parola1 = document.getElementById("modifica_parola1");
   const edit_parola2 = document.getElementById("modifica_parola2");
-  
 
   form_modifica_utilizator.addEventListener("submit", function (event) {
     event.preventDefault();
-    
+
     const userId = document.getElementById("userID").value;
     console.log("User ID:", userId);
 
@@ -244,15 +241,14 @@ window.addEventListener("load", function (e) {
           throw new Error(`HTTP error! Status: ${raspuns.status}`);
         }
 
-        // Correctly parse the JSON response body
         const rezultat = await raspuns.json();
         console.log("Parsed JSON response:", rezultat);
 
+        console.log("rezultat:", rezultat);
         if (rezultat.error) {
-          // Show error message from server
           showAlert(rezultat.error, "danger");
         } else if (rezultat.success) {
-          // Show success message from server
+
           showAlert(rezultat.success, "success");
         }
       } catch (error) {
@@ -261,19 +257,21 @@ window.addEventListener("load", function (e) {
       }
     }
 
-    // Helper function to show alert messages inside modal-body
     function showAlert(message, type) {
-      // Remove existing alerts
-      const existingAlerts = document.querySelectorAll(".alert");
-      existingAlerts.forEach((alert) => alert.remove());
+      const container = document.querySelector(".alert_modifica_utilizator");
+
+      if (!container) {
+        console.error("Alert container not found!");
+        return;
+      }
 
       const mesaj = document.createElement("div");
-      mesaj.className = `alert alert-${type} alert-dismissible fade show`;
+      mesaj.className = `alert alert-${type} alert-dismissible fade show mt-2`;
       mesaj.innerHTML =
         message +
         `<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
-      const modal_body = document.querySelector(".modal-body");
-      modal_body.insertBefore(mesaj, modal_body.firstChild);
+
+      container.appendChild(mesaj);
     }
 
     preiaDatele();
