@@ -168,8 +168,8 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="parola1" name="parola1"
                                         aria-describedby="ajutorParola1" autocomplete="off" required>
-                                    <button type="button" class="btn btn-secondary" id="afisare_parola" role="switch"
-                                        aria-label="Afiseza parola" aria-checked="false"><i class="bi bi-eye"></i>
+                                    <button type="button" class="btn btn-secondary toggle-password" aria-controls="parola1" aria-label="Afișează parola">
+                                        <i class="bi bi-eye-slash"></i>
                                     </button>
                                 </div>
                                 <div id="ajutorParola1" class="form-text">
@@ -185,16 +185,24 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
 
                         <div class="row mt-3">
                             <label for="parola2" class="col-form-label">Confirmați parola:</label>
-                            <div>
+                            <div class="input-group">
                                 <input type="password" class="form-control" id="parola2" name="parola2"
                                     aria-describedby="ajutorParola2" autocomplete="off" required>
-                                <div id="ajutorParola2" class="form-text">
-                                    <span id="potrivire_parole" class="bi bi-x-lg" style="color:#FF0004;"></span>
-                                </div>
+                                <button type="button" class="btn btn-secondary toggle-password" aria-controls="parola2" aria-label="Afișează parola">
+                                    <i class="bi bi-eye-slash"></i>
+                                </button>
+                            </div>
+                            <div id="ajutorParola2" class="form-text">
+                                <span id="potrivire_parole" class="bi bi-x-lg" style="color:#FF0004;"></span>
                             </div>
                         </div>
                     </div>
                     <script type="text/javascript" src="../assets/parola.js"></script>
+
+                    <div class="row mt-3 px-3">
+                        <div class="alert_adauga_utilizator alerte px-0" style="width: 465px; margin-left: .8em"></div>
+                    </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Închide</button>
                         <button type="submit" class="btn btn-secondary">Adaugă</button>
@@ -218,7 +226,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                 </div>
                 <form method="post" action="" id="form_modifica_utilizator">
                     <div class="modal-body">
-                       <input type="hidden" id="userID" name="userID"  value="">
+                        <input type="hidden" id="userID" name="userID" value="">
                         <div class="row">
                             <label for="modifica_rol" class="col-form-label">Tip utilizator:</label>
                             <div>
@@ -265,14 +273,15 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                                     aria-describedby="ajutorDataNasterii" value="">
                             </div>
                         </div>
+
                         <div class="row mt-3">
                             <label for="modifica_parola1" class="col-form-label">Parola:</label>
                             <div>
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="modifica_parola1" name="modifica_parola1"
                                         aria-describedby="ajutorParola1" autocomplete="off">
-                                    <button type="button" class="btn btn-secondary" id="afisare_parola" role="switch"
-                                        aria-label="Afiseza parola" aria-checked="false"><i class="bi bi-eye"></i>
+                                    <button type="button" class="btn btn-secondary toggle-password" aria-controls="modifica_parola1" aria-label="Afișează parola">
+                                        <i class="bi bi-eye-slash"></i>
                                     </button>
                                 </div>
                                 <div id="ajutorParola1" class="form-text">
@@ -288,16 +297,25 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
 
                         <div class="row mt-3">
                             <label for="modifica_parola2" class="col-form-label">Confirmați parola:</label>
-                            <div>
+                            <div class="input-group">
                                 <input type="password" class="form-control" id="modifica_parola2" name="modifica_parola2"
                                     aria-describedby="ajutorParola2" autocomplete="off">
-                                <div id="ajutorParola2" class="form-text">
-                                    <span id="potrivire_parole_modificate" class="bi bi-x-lg" style="color:#FF0004;"></span>
-                                </div>
+                                <button type="button" class="btn btn-secondary toggle-password" aria-controls="modifica_parola2" aria-label="Afișează parola">
+                                    <i class="bi bi-eye-slash"></i>
+                                </button>
+                            </div>
+                            <div id="ajutorParola2" class="form-text">
+                                <span id="potrivire_parole_modificate" class="bi bi-x-lg" style="color:#FF0004;"></span>
                             </div>
                         </div>
+
                     </div>
                     <script type="text/javascript" src="../assets/parola.js"></script>
+
+                    <div class="row mt-3 px-3">
+                        <div class="alert_modifica_utilizator alerte px-0" style="width: 465px; margin-left: .8em"></div>
+                    </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Închide</button>
                         <button type="submit" class="btn btn-secondary">Modifică</button>
@@ -309,6 +327,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
 
     <script type="text/javascript" src="../assets/preia_datele_utilizatori.js"></script>
     <script type="text/javascript" src="../assets/modifica_parola.js"></script>
+    <script type="text/javascript" src="../assets/show_hide_passwords.js"></script>
 </body>
 
 </html>
