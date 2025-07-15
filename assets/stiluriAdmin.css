@@ -1,0 +1,33 @@
+.container{
+    padding-bottom: 2.5em;
+}
+
+.sort-header {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color 0.2s;
+}
+
+.sort-header:hover {
+  color: #0d6efd;
+}
+
+.sort-header i {
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.searchBar {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.searchBtn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
