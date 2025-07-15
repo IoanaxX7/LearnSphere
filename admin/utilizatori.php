@@ -22,6 +22,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
         die("Fisierul head nu a fost gasit!");
     ?>
     <title>Utilizatori</title>
+    <link rel="stylesheet" href="../assets/stiluriAdmin.css">
 </head>
 
 <body>
@@ -44,53 +45,195 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                                 data-bs-target="#modal_adauga_utilizator">
                                 Adaugă utilizator
                             </button>
-                            <form class="d-flex" role="search" style="margin-left: 1rem;">
-                                <input class="form-control" type="search" placeholder="Search" aria-label="Search" style="border-color:gray">
-                                <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+                            <form class="d-flex" role="search" method="GET" style="margin-left: 1rem;">
+                                <input class="form-control searchBar" type="search" name="search" placeholder="Caută" aria-label="Search" style="border-color:gray"
+                                    value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+
+                                <button class="btn btn-outline-secondary searchBtn" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                                <a href="<?= strtok($_SERVER["REQUEST_URI"], '?') ?>" class="btn btn-outline-danger ms-3">Resetează</a>
                             </form>
+
+
                         </div>
                         <h4 class="card-title mt-4">Tabel utilizatori</h4>
                         <div class="mesaj" style="display: none; margin: 5px 0;"></div>
 
                         <table class="table mt-4 table-striped" id="tabel_utilizatori">
+                            <?php
+                            function sortLink($label, $column, $currentSort, $currentOrder)
+                            {
+                                if ($currentSort === $column) {
+                                    $icon = $currentOrder === 'ASC'
+                                        ? '<i class="bi bi-caret-up-fill ms-1"></i>'
+                                        : '<i class="bi bi-caret-down-fill ms-1"></i>';
+                                } else {
+                                    $icon = '<i class="bi bi-funnel-fill"></i>';
+                                }
+
+                                $newOrder = ($currentSort === $column && $currentOrder === 'ASC') ? 'desc' : 'asc';
+                                $query = http_build_query(array_merge($_GET, ['sort' => $column, 'order' => $newOrder]));
+
+                                return "<a href='?{$query}' class='sort-header' title='Sortează după {$label}'>{$label} {$icon}</a>";
+                            }
+
+
+                            ?>
+
+
+                            <?php
+                            $allowedSortColumns = ['username', 'nume', 'prenume', 'email', 'rol', 'dataNasterii', 'dataInregistrarii'];
+                            $sort = isset($_GET['sort']) && in_array($_GET['sort'], $allowedSortColumns) ? $_GET['sort'] : 'userID';
+                            $order = (isset($_GET['order']) && strtolower($_GET['order']) === 'desc') ? 'DESC' : 'ASC';
+                            $nextOrder = $order === 'ASC' ? 'desc' : 'asc';
+                            ?>
+
                             <thead>
                                 <tr class="table-info">
                                     <th style="display: none;">ID</th>
-                                    <th>Nume</th>
-                                    <th>Prenume</th>
-                                    <th>Username</th>
-                                    <th>Email</th>
-                                    <th>Tip utilizator</th>
-                                    <th>Data nașterii</th>
-                                    <th>Data înregistrării</th>
+                                    <th><?= sortLink('Nume', 'nume', $sort, $order) ?></th>
+                                    <th><?= sortLink('Prenume', 'prenume', $sort, $order) ?></th>
+                                    <th><?= sortLink('Username', 'username', $sort, $order) ?></th>
+                                    <th><?= sortLink('Email', 'email', $sort, $order) ?></th>
+                                    <th><?= sortLink('Tip utilizator', 'rol', $sort, $order) ?></th>
+                                    <th><?= sortLink('Data nașterii', 'dataNasterii', $sort, $order) ?></th>
+                                    <th><?= sortLink('Data înregistrării', 'dataInregistrarii', $sort, $order) ?></th>
                                     <th class="text-center">Acțiuni</th>
                                 </tr>
                             </thead>
+
                             <tbody>
                                 <?php
-                                try {
-                                    $cerereSQL = $conexiune->query('SELECT * FROM users');
-                                    while ($rand = $cerereSQL->fetch(PDO::FETCH_ASSOC)) {
-                                        echo '<tr>
-                                            <td style="display: none;">' . $rand["userID"] . '</td>
-                                            <td>' . $rand["nume"] . '</td>
-                                            <td>' . $rand["prenume"] . '</td>
-                                            <td>' . $rand["username"] . '</td>
-                                            <td>' . $rand["email"] . '</td>
-                                            <td>' . $rand["rol"] . '</td>
-                                            <td>' . $rand["dataNasterii"] . '</td>
-                                            <td>' . $rand["dataInregistrarii"] . '</td>
-                                            <td class="text-center">
-                                                <a id="' . $rand["userID"] . '" class="edit" title="Modifică" data-bs-toggle="modal" data-bs-target="#modal_modifica_utilizator"
-                                                style="font-size: 1.2em; color: SlateBlue;"><i class="bi bi-pencil-fill"></i></a>
-                                                <a id="' . $rand["userID"] . '" class="delete" href="#" title="Șterge" style="font-size: 1.2em; color: Tomato;"><i class="bi bi-trash-fill"></i></a>
-                                            </td>';
-                                    }
-                                } catch (PDOException $e) {
-                                    exit("Eroare la afișarea datelor din baza de date.<br/>" . $e->getMessage() . "<br/>");
+                                $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+                                $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+                                $usersPerPage = 10;
+                                $offset = ($page - 1) * $usersPerPage;
+
+                                // Validate ORDER BY
+                                $allowedSortColumns = ['username', 'nume', 'prenume', 'email', 'rol', 'dataNasterii', 'dataInregistrarii'];
+                                $sort = isset($_GET['sort']) && in_array($_GET['sort'], $allowedSortColumns) ? $_GET['sort'] : 'userID';
+                                $order = (isset($_GET['order']) && strtolower($_GET['order']) === 'desc') ? 'DESC' : 'ASC';
+
+                                // Total users (search-aware)
+                                if ($search !== '') {
+                                    $stmtTotal = $conexiune->prepare("
+                                        SELECT COUNT(*) FROM users
+                                        WHERE username LIKE :search OR nume LIKE :search OR prenume LIKE :search OR email LIKE :search
+                                    ");
+                                    $stmtTotal->execute(['search' => "%$search%"]);
+                                } else {
+                                    $stmtTotal = $conexiune->query("SELECT COUNT(*) FROM users");
+                                }
+                                $totalUsers = $stmtTotal->fetchColumn();
+                                $totalPages = ceil($totalUsers / $usersPerPage);
+                                $page = max(1, min($page, $totalPages));
+                                $startIndex = $offset + 1;
+                                $endIndex = min($offset + $usersPerPage, $totalUsers);
+
+                                // Fetch users (search-aware, with ORDER BY)
+                                if ($search !== '') {
+                                    $stmt = $conexiune->prepare("
+                                        SELECT * FROM users
+                                        WHERE username LIKE :search OR nume LIKE :search OR prenume LIKE :search OR email LIKE :search
+                                        ORDER BY $sort $order
+                                        LIMIT :limit OFFSET :offset
+                                    ");
+                                    $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+                                    $stmt->bindValue(':limit', $usersPerPage, PDO::PARAM_INT);
+                                    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+                                    $stmt->execute();
+                                } else {
+                                    $stmt = $conexiune->prepare("
+                                        SELECT * FROM users
+                                        ORDER BY $sort $order
+                                        LIMIT :limit OFFSET :offset
+                                    ");
+                                    $stmt->bindValue(':limit', $usersPerPage, PDO::PARAM_INT);
+                                    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+                                    $stmt->execute();
+                                }
+
+                                // Render users
+                                while ($rand = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    echo '<tr>
+                                        <td style="display: none;">' . $rand["userID"] . '</td>
+                                        <td>' . htmlspecialchars($rand["nume"]) . '</td>
+                                        <td>' . htmlspecialchars($rand["prenume"]) . '</td>
+                                        <td>' . htmlspecialchars($rand["username"]) . '</td>
+                                        <td>' . htmlspecialchars($rand["email"]) . '</td>
+                                        <td>' . htmlspecialchars($rand["rol"]) . '</td>
+                                        <td>' . htmlspecialchars($rand["dataNasterii"]) . '</td>
+                                        <td>' . htmlspecialchars($rand["dataInregistrarii"]) . '</td>
+                                        <td class="text-center">
+                                            <a id="' . $rand["userID"] . '" class="edit" title="Modifică" data-bs-toggle="modal" data-bs-target="#modal_modifica_utilizator"
+                                            style="font-size: 1.2em; color: SlateBlue;"><i class="bi bi-pencil-fill"></i></a>
+                                            <a id="' . $rand["userID"] . '" class="delete" href="#" title="Șterge" style="font-size: 1.2em; color: Tomato;"><i class="bi bi-trash-fill"></i></a>
+                                        </td>
+                                    </tr>';
                                 }
                                 ?>
                             </tbody>
+
+                        </table>
+
+                        <?php if ($totalUsers > 0): ?>
+                            <p class="text-center mt-2">Afișare utilizatori <?= $startIndex ?>–<?= $endIndex ?> din <?= $totalUsers ?></p>
+                        <?php else: ?>
+                            <p class="text-center mt-2">Nu s-au găsit utilizatori.</p>
+                        <?php endif; ?>
+
+                        <?php if ($totalPages > 1): ?>
+                            <?php
+                            $queryString = http_build_query(array_filter($_GET, fn($k) => $k !== 'page', ARRAY_FILTER_USE_KEY));
+                            $urlBase = strtok($_SERVER["REQUEST_URI"], '?') . '?' . $queryString;
+                            ?>
+                            <nav>
+                                <ul class="pagination justify-content-center mt-3" style="gap: 0.5rem;">
+
+                                    <?php if ($page > 1): ?>
+                                        <li class="page-item">
+                                            <a class="btn btn-outline-secondary" href="<?= $urlBase . '&page=' . ($page - 1) ?>">‹</a>
+                                        </li>
+                                    <?php endif; ?>
+
+                                    <?php
+                                    $range = 1;
+                                    $startPage = max(1, $page - $range);
+                                    $endPage = min($totalPages, $page + $range);
+
+                                    if ($startPage > 2) {
+                                        echo '<li><a class="btn btn-outline-secondary" href="' . $urlBase . '&page=1">1</a></li>';
+                                        echo '<li><span class="btn btn-light disabled">...</span></li>';
+                                    } elseif ($startPage == 2) {
+                                        echo '<li><a class="btn btn-outline-secondary" href="' . $urlBase . '&page=1">1</a></li>';
+                                    }
+
+                                    for ($i = $startPage; $i <= $endPage; $i++) {
+                                        if ($i == $page) {
+                                            echo '<li><a class="btn btn-secondary text-white" style="pointer-events: none;">' . $i . '</a></li>';
+                                        } else {
+                                            echo '<li><a class="btn btn-outline-secondary" href="' . $urlBase . '&page=' . $i . '">' . $i . '</a></li>';
+                                        }
+                                    }
+
+                                    if ($endPage < $totalPages - 1) {
+                                        echo '<li><span class="btn btn-light disabled">...</span></li>';
+                                        echo '<li><a class="btn btn-outline-secondary" href="' . $urlBase . '&page=' . $totalPages . '">' . $totalPages . '</a></li>';
+                                    } elseif ($endPage == $totalPages - 1) {
+                                        echo '<li><a class="btn btn-outline-secondary" href="' . $urlBase . '&page=' . $totalPages . '">' . $totalPages . '</a></li>';
+                                    }
+                                    ?>
+
+                                    <?php if ($page < $totalPages): ?>
+                                        <li class="page-item">
+                                            <a class="btn btn-outline-secondary" href="<?= $urlBase . '&page=' . ($page + 1) ?>">›</a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </nav>
+                        <?php endif; ?>
+
                         </table>
                     </div>
                 </div>
