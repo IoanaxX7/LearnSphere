@@ -124,7 +124,7 @@
 }
 
 .form-btn-signin {
-  margin-top: 1.5em;
+  margin-top: .25em;
 }
 
 .material_form {
@@ -198,4 +198,9 @@
   margin-left: 0.75em;
   margin-top: 0.3em;
   width: 29.1em;
+}
+
+.alert-wrapper{
+  width: 400px;
+  padding-top: 1em;
 }
