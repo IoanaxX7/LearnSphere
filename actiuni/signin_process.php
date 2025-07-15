@@ -48,7 +48,6 @@ if (isset($_POST)) {
         $date_iesire['erori_validare'] = $erori_validare;
     } else {
         $date_iesire['succes'] = true;
-        $date_iesire['succes_validare'] = 'Datele au fost validate cu succes!';
         try {
             $sql1 = 'SELECT username FROM users WHERE username = :username';
             $cerereSQL1 = $conexiune->prepare($sql1);
@@ -74,12 +73,13 @@ if (isset($_POST)) {
                         )
                     )
                 ) {
-                    $mesaj_succes_sql .= 'Utilizatorul a fost adăugat în baza de date!';
+                    $mesaj_succes_sql .= 'Contul a fost creat!';
+                    $date_iesire['succes_validare'] = 'Contul a fost creat cu succes! Redirecționare în 5 secunde...';
                 } else {
-                    $mesaj_eroare_sql = 'Eroare la adăugarea utilizatorului în baza de date!';
+                    $mesaj_eroare_sql = 'Eroare la crearea contului!';
                 }
             } else {
-                $mesaj_eroare_sql = 'Eroare! Numele de utilizator există deja în baza de date.';
+                $mesaj_eroare_sql = 'Numele de utilizator există deja.';
             }
         } catch (PDOException $e) {
             $mesaj_eroare_sql = 'Eroare! ' . $e->getMessage();
