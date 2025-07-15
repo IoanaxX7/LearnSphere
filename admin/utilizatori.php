@@ -78,7 +78,6 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                                 return "<a href='?{$query}' class='sort-header' title='Sortează după {$label}'>{$label} {$icon}</a>";
                             }
 
-
                             ?>
 
 
@@ -233,8 +232,6 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                                 </ul>
                             </nav>
                         <?php endif; ?>
-
-                        </table>
                     </div>
                 </div>
             </div>
