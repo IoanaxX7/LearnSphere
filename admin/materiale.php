@@ -318,10 +318,16 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                                 <input type="file" class="form-control" id="material" name="material" value="">
                             </div>
                         </div>
+
+                        <div class="row mt-3 px-3">
+                            <div class="alert_modifica_material alerte px-0" style="width: 465px; margin-left: .8em"></div>
+                        </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Închide</button>
                             <button type="submit" class="btn btn-secondary">Modifică</button>
                         </div>
+                    </div>
                 </form>
             </div>
         </div>
