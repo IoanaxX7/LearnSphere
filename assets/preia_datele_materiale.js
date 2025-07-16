@@ -15,8 +15,7 @@ window.addEventListener("load", function (e) {
           modal.querySelector("#categorie").value = data.categorieID;
           modal.querySelector("#descriere").value = data.descriere;
           modal.querySelector("#cuvinte_cheie").value =
-            data.cuvinte_cheie;
-          modal.querySelector("#material").value = data.material;
+            data.cuvinteCheie;
         })
         .catch((error) =>
           console.error("Eroare la încărcarea materialului:", error)
