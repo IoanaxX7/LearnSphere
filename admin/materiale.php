@@ -54,7 +54,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                         <h4 class="card-title mt-4">Tabel materiale</h4>
                         <div class="mesaj" style="display: none; margin: 5px 0;"></div>
 
-                        <table class="table mt-4 table-striped" id="tabel_utilizatori">
+                        <table class="table mt-4 table-striped" id="tabel_materiale">
                             <?php
                             function sortLink($label, $column, $currentSort, $currentOrder)
                             {
