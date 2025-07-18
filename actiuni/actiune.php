@@ -6,6 +6,7 @@ header('Content-Type: application/json');
 $userID = $_SESSION['userID'] ?? null;
 $materialID = $_POST['materialID'] ?? null;
 $comentariuID = $_POST['comentariuID'] ?? null;
+$intrebareID = $_POST['intrebareID'] ?? null;
 $reaction = $_POST['reaction'] ?? null;
 
 if (!$userID || !in_array($reaction, ['like', 'dislike'])) {
@@ -16,17 +17,20 @@ if (!$userID || !in_array($reaction, ['like', 'dislike'])) {
 if ($materialID !== null) {
     $id = (int)$materialID;
     $idField = 'materialID';
-    $likesTable = 'likes';
-    $dislikesTable = 'dislikes';
 } elseif ($comentariuID !== null) {
     $id = (int)$comentariuID;
     $idField = 'comentariuID';
-    $likesTable = 'likes';
-    $dislikesTable = 'dislikes';
+} elseif ($intrebareID !== null) {
+    $id = (int)$intrebareID;
+    $idField = 'intrebareID';
 } else {
     echo json_encode(['success' => false, 'message' => 'No ID provided']);
     exit;
 }
+
+// Determine tables (you can customize this if you have different tables for each entity type)
+$likesTable = 'likes';
+$dislikesTable = 'dislikes';
 
 // Remove opposite reaction first
 if ($reaction === 'like') {
