@@ -78,8 +78,12 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
         $params = $isLoggedIn ? ['currentUserID' => $_SESSION['userID']] : [];
         $cerereSQL->execute($params);
 
+
+        echo '<div class="row">';
+
         while ($rand = $cerereSQL->fetch(PDO::FETCH_ASSOC)) {
             echo '
+             <div class="col-12 col-lg-6 mb-4">
                 <div class="post">
                     <div class="post-header">
                         <div class="profile-pic">
@@ -193,8 +197,9 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
                 </div>';
             }
 
-            echo '</div></div>';
+            echo '</div></div></div>';
         }
+        echo '</div>';
     } catch (PDOException $e) {
         exit("Eroare la afișarea datelor din baza de date.<br/>" . $e->getMessage() . "<br/>");
     }
