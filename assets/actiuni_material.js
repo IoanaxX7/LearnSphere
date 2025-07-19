@@ -6,7 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const type = this.getAttribute("data-type"); // 'material', 'comment', or 'question'
 
       if (!reaction || !id || !type) {
-        console.warn("Missing attributes", { id, reaction, type });
+        console.warn("Missing attributes", {
+          id,
+          reaction,
+          type,
+        });
         return;
       }
 
