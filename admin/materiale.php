@@ -281,6 +281,25 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                             </div>
                         </div>
                         <div class="row mt-3">
+                            <label for="materie" class="col-form-label">Materia:</label>
+                            <div>
+                                <select name="materie" id="materie" class="form-control categorii" required>
+                                    <option value=""> -- alegeți o opțiune -- </option>
+                                    <?php
+                                    try {
+                                        $cerereSQL = $conexiune->query('SELECT * FROM materii');
+                                        while ($rand = $cerereSQL->fetch(PDO::FETCH_ASSOC)) {
+                                            $selected = ($rand["materieID"] == $selectedMaterie) ? 'selected' : '';
+                                            echo '<option value="' . $rand["materieID"] . '" ' . $selected . '>' . $rand["nume"] . '</option>';
+                                        }
+                                    } catch (PDOException $e) {
+                                        exit("Eroare la afișarea datelor din baza de date.<br/>" . $e->getMessage());
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
                             <label for="categorie" class="col-form-label">Categorie:</label>
                             <div>
                                 <select name="categorie" id="categorie" class="form-control categorii">
