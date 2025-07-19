@@ -6,7 +6,12 @@ header('Content-Type: application/json');
 if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
     try {
-        $stmt = $conexiune->prepare("SELECT * FROM materiale WHERE materialID = ?");
+        $stmt = $conexiune->prepare("
+            SELECT m.*, c.materieID AS materieID
+            FROM materiale m
+            JOIN categorii c ON m.categorieID = c.categorieID
+            WHERE m.materialID = ?
+        ");
         $stmt->execute([$id]);
         $material = $stmt->fetch(PDO::FETCH_ASSOC);
 
