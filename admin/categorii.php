@@ -172,7 +172,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                                         <td>' . htmlspecialchars($rand["descriere"] ?? '') . '</td>
                                         <td>' . htmlspecialchars($rand["dataPostarii"] ?? '') . '</td>
                                         <td class="text-center">
-                                            <a id="' . ($rand["categorieID"] ?? '') . '" class="edit" title="Modifică" data-bs-toggle="modal" data-bs-target="#modal_modifica_material"
+                                            <a id="' . ($rand["categorieID"] ?? '') . '" class="edit" title="Modifică" data-bs-toggle="modal" data-bs-target="#modal_modifica_categorie"
                                                 style="font-size: 1.2em; color: SlateBlue;"><i class="bi bi-pencil-fill"></i></a>
                                             <a id="' . ($rand["categorieID"] ?? '') . '" class="delete" href="#" title="Șterge" style="font-size: 1.2em; color: Tomato;"><i class="bi bi-trash-fill"></i></a>
                                         </td>
@@ -258,6 +258,22 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                 <form method="post" action="" id="form_adauga_categorie">
                     <div class="modal-body">
                         <div class="row mt-3">
+                            <label for="materie">Materia:</label>
+                            <select name="materie" id="materie" class="form-control modal-select" required style="width: 470px; margin-left: .6em; margin-top: .4em;">
+                                <option selected value> -- alegeți o materie -- </option>
+                                <?php
+                                try {
+                                    $cerereSQL = $conexiune->query('SELECT * FROM materii');
+                                    while ($rand = $cerereSQL->fetch(PDO::FETCH_ASSOC)) {
+                                        echo '<option value="' . $rand["materiiID"] . '">' . $rand["nume"] . '</option>';
+                                    }
+                                } catch (PDOException $e) {
+                                    exit("Eroare la afișarea materiilor.<br/>" . $e->getMessage() . "<br/>");
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="row mt-3">
                             <label for="nume_catgorie" class="col-form-label">Nume categorie:</label>
                             <div>
                                 <input type="text" class="form-control" id="nume_catgorie" name="nume_catgorie"
@@ -296,6 +312,22 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], [1])) {
                 <form method="post" action="" id="form_modifica_categorie">
                     <div class="modal-body">
                         <input type="hidden" id="categorieID" name="categorieID" value="">
+                        <div class="row mt-3">
+                            <label for="materie">Materia:</label>
+                            <select name="materie" id="materie" class="form-control modal-select" required style="width: 470px; margin-left: .6em; margin-top: .4em;">
+                                <option selected value> -- alegeți o materie -- </option>
+                                <?php
+                                try {
+                                    $cerereSQL = $conexiune->query('SELECT * FROM materii');
+                                    while ($rand = $cerereSQL->fetch(PDO::FETCH_ASSOC)) {
+                                        echo '<option value="' . $rand["materiiID"] . '">' . $rand["nume"] . '</option>';
+                                    }
+                                } catch (PDOException $e) {
+                                    exit("Eroare la afișarea materiilor.<br/>" . $e->getMessage() . "<br/>");
+                                }
+                                ?>
+                            </select>
+                        </div>
                         <div class="row mt-3">
                             <label for="modifica_nume_categorie" class="col-form-label">Nume categorie:</label>
                             <div>
