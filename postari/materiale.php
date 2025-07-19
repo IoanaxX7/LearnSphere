@@ -358,11 +358,11 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
                             $dislikeIcon = $rand["hasDisliked"] ? 'bi-hand-thumbs-down-fill' : 'bi-hand-thumbs-down';
 
                             echo '
-                            <button class="reaction-btn like ' . $likeActive . '" data-id="' . $rand['materialID'] . '" data-reaction="like" title="Like">
+                            <button data-type="material" class="reaction-btn like ' . $likeActive . '" data-id="' . $rand['materialID'] . '" data-reaction="like" title="Like">
                                 <i class="bi ' . $likeIcon . '"></i>
                                 <span class="like-count" id="like-count-' . $rand['materialID'] . '">' . $likeCount . '</span>
                             </button>
-                            <button class="reaction-btn dislike ' . $dislikeActive . '" data-id="' . $rand['materialID'] . '" data-reaction="dislike" title="Dislike">
+                            <button data-type="material" class="reaction-btn dislike ' . $dislikeActive . '" data-id="' . $rand['materialID'] . '" data-reaction="dislike" title="Dislike">
                                 <i class="bi ' . $dislikeIcon . '"></i>
                                 <span class="dislike-count" id="dislike-count-' . $rand['materialID'] . '">' . $dislikeCount . '</span>
                             </button>
