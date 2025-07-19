@@ -12,6 +12,7 @@ window.addEventListener("load", function (e) {
           const modal = document.getElementById("modal_modifica_material");
 
           modal.querySelector("#titlu").value = data.titlu;
+          modal.querySelector("#materie").value = String(data.materieID);
           modal.querySelector("#categorie").value = data.categorieID;
           modal.querySelector("#descriere").value = data.descriere;
           modal.querySelector("#cuvinte_cheie").value =
@@ -39,6 +40,7 @@ window.addEventListener("load", function (e) {
         })
           .then((response) => response.json())
           .then((data) => {
+            console.log(data);
             if (data.success) {
               this.closest("tr").remove();
             } else {
