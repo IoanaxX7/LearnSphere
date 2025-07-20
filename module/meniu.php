@@ -45,12 +45,13 @@
             </ul>
 
             <div class="d-flex flex-grow-1 justify-content-center my-2 my-lg-0">
-                <form class="input-group w-50" role="search">
-                    <input type="search" class="form-control" placeholder="Search" aria-label="Caută">
+                <form class="input-group w-50" role="search" action="<?php echo url() ?>/postari/cauta_materiale.php" method="GET">
+                    <input type="search" name="q" class="form-control" placeholder="Caută" aria-label="Caută">
                     <button class="btn meniuBtn" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
                 </form>
+
             </div>
 
             <?php
