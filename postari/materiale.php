@@ -282,10 +282,10 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
                         </div>
                     </div>';
                 } else {
-                    echo '<div class="row">';
+                    echo '<div class="row mx-md-2 mx-lg-4">';
                     while ($rand = $cerereSQL->fetch(PDO::FETCH_ASSOC)) {
                         echo '
-                     <div class="col-12 col-lg-6 mb-4">
+                     <div class="col-md-6 col-lg-4">
                         <div class="post">
                             <div class="post-header">
                                 <div class="profile-pic">
