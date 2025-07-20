@@ -30,7 +30,6 @@ if (htmlspecialchars($_SERVER["REQUEST_METHOD"]) == "POST") {
     $nume_utilizator = htmlspecialchars($data["nume_utilizator"] ?? "");
     $nume = htmlspecialchars($data["nume"] ?? "");
     $prenume = htmlspecialchars($data["prenume"] ?? "");
-    $poza_profil = htmlspecialchars($data["poza_profil"] ?? "");
     $email = htmlspecialchars($data["email"] ?? "");
     $data_nasterii = htmlspecialchars($data["data_nasterii"] ?? "");
     $biografie = htmlspecialchars($data["biografie"] ?? "");
@@ -91,31 +90,9 @@ if (htmlspecialchars($_SERVER["REQUEST_METHOD"]) == "POST") {
                         if (!empty($valoare)) {
                             $sql = "UPDATE users SET $cheie=:$cheie WHERE userID=:userID";
                             $stmt = $conexiune->prepare($sql);
-                            if ($stmt->execute([":$cheie" => $valoare, ":userID" => $_SESSION["userID"]])) {
-                                $mesaj .= "<br>" . ucfirst($cheie) . " a fost modificat.";
-                            } else {
+                            if (!$stmt->execute([":$cheie" => $valoare, ":userID" => $_SESSION["userID"]])) {
                                 $mesaj .= "<br>Eroare la modificarea $cheie.";
                             }
-                        }
-                    }
-
-                    if (!empty($poza_profil)) {
-                        $upload_dir = __DIR__ . "/../uploads/" . $nume_utilizator . "/";
-                        if (!file_exists($upload_dir)) {
-                            mkdir($upload_dir, 0755, true);
-                        }
-                        $file_name = basename($poza_profil);
-                        $target_path = $upload_dir . $file_name;
-
-                        $sql3 = "UPDATE users SET pozaProfil=:poza_profil WHERE userID=:userID";
-                        $cerereSQL3 = $conexiune->prepare($sql3);
-                        if ($cerereSQL3->execute([
-                            ":poza_profil" => $file_name,
-                            ":userID" => $_SESSION["userID"]
-                        ])) {
-                            $mesaj .= "<br>Poza de profil a fost modificată.";
-                        } else {
-                            $mesaj .= "<br>Eroare la modificarea pozei de profil.";
                         }
                     }
                 } else {
