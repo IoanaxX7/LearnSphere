@@ -70,7 +70,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
         JOIN categorii c ON m.categorieID = c.categorieID
         JOIN materii mt ON c.materieID = mt.materiiID
         ORDER BY m.dataPostarii DESC
-        LIMIT 10';
+        LIMIT 20';
 
 
 
