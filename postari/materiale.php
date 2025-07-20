@@ -395,8 +395,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
                                     <i class="bi bi-chat-left-text"></i>
                                     <span class="comment-count" id="comment-count-' . $rand['materialID'] . '">' . $rand['commentCount'] . '</span>
                                 </button>
-                            </a>
-                        </div>';
+                            </a>';
                         }
 
                         echo '</div></div></div>';
