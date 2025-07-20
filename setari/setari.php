@@ -86,6 +86,9 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
                         <div id="ajutorParola2" class="form-text">
                             <span id="potrivire_parole" class="bi bi-x-lg" style="color: #FF0004;"></span>
                         </div>
+                        <div style="margin-top: .5em;">
+                            <div class="alerte"></div>
+                        </div>
                         <button class="form-btn form-btn-signin">Modifică</button>
                         <button type="button" class="form-btn form-btn-delete" id="stergeUtilizator">Șterge utilizator</button>
 
