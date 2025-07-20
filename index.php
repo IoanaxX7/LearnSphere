@@ -24,7 +24,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
     <title>LearnSphere</title>
 </head>
 
-<body>
+<body style="margin-top: 1.5em;">
     <?php
     file_exists(__DIR__ . "/module/meniu.php") ?
         require_once __DIR__ . "/module/meniu.php" :
@@ -193,8 +193,7 @@ if (empty($_SESSION["username"]) || !in_array($_SESSION["rol"], $Roluri)) {
                             <i class="bi bi-chat-left-text"></i>
                             <span class="comment-count" id="comment-count-' . $rand['materialID'] . '">' . $rand['commentCount'] . '</span>
                         </button>
-                    </a>
-                </div>';
+                    </a>';
             }
 
             echo '</div></div></div>';
