@@ -23,10 +23,8 @@ window.addEventListener("load", function (e) {
       console.error("Eroare la încărcarea utilizatorlui:", error)
     );
 
-    //Modifica datele utilizator
-  const date_personale = document.getElementById(
-    "date_personale"
-  );
+  //Modifica datele utilizator
+  const date_personale = document.getElementById("date_personale");
   const nume = document.getElementById("nume");
   const prenume = document.getElementById("prenume");
   const nume_utilizator = document.getElementById("nume_utilizator");
@@ -45,7 +43,6 @@ window.addEventListener("load", function (e) {
         nume: nume.value,
         prenume: prenume.value,
         nume_utilizator: nume_utilizator.value,
-        poza_profil: poza_profil.files[0],
         email: email.value,
         data_nasterii: data_nasterii.value,
         biografie: biografie.value,
@@ -68,15 +65,12 @@ window.addEventListener("load", function (e) {
           throw new Error(`HTTP error! Status: ${raspuns.status}`);
         }
 
-        // Correctly parse the JSON response body
         const rezultat = await raspuns.json();
         console.log("Parsed JSON response:", rezultat);
 
         if (rezultat.error) {
-          // Show error message from server
           showAlert(rezultat.error, "danger");
         } else if (rezultat.success) {
-          // Show success message from server
           showAlert(rezultat.success, "success");
         }
       } catch (error) {
@@ -84,22 +78,50 @@ window.addEventListener("load", function (e) {
         showAlert(error.message, "danger");
       }
     }
-    // Helper function to show alert messages inside modal-body
+    async function uploadProfilePicture() {
+      if (poza_profil.files.length === 0) return;
+
+      const formData = new FormData();
+      formData.append("poza_profil", poza_profil.files[0]);
+      formData.append("nume_utilizator", nume_utilizator.value);
+
+      try {
+        const response = await fetch("../actiuni/adauga_poza_profil.php", {
+          method: "POST",
+          body: formData,
+        });
+
+        const rezultat = await response.json();
+
+        if (rezultat.error) {
+          showAlert(rezultat.error, "danger");
+        } else {
+          showAlert(rezultat.success, "success");
+          setTimeout(() => {
+            location.reload();
+          }, 1500);
+        }
+      } catch (error) {
+        console.error("Eroare la upload:", error);
+        showAlert("Eroare la încărcarea pozei de profil.", "danger");
+      }
+    }
+
     function showAlert(message, type) {
-      // Remove existing alerts
-      const existingAlerts = document.querySelectorAll(".alert");
-      existingAlerts.forEach((alert) => alert.remove());
+      const alertContainer = document.querySelector(".alerte");
+
+      alertContainer.innerHTML = "";
 
       const mesaj = document.createElement("div");
       mesaj.className = `alert alert-${type} alert-dismissible fade show`;
       mesaj.innerHTML =
         message +
         `<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
-      const settings = document.querySelector(".settings");
-      settings.insertBefore(mesaj, settings.firstChild);
+      alertContainer.appendChild(mesaj);
     }
 
     preiaDatele();
+    uploadProfilePicture();
   });
 
   //Sterge utilizator
