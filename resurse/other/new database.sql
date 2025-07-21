@@ -345,7 +345,7 @@ INSERT INTO `users` (`userID`, `username`, `rol`, `parola`, `pozaProfil`, `nume`
 (35, 'Nicolae', 2, '$2y$10$y/Yl0axkGR0Kb2RzG778xuhsQY4iWZNYrFVE8TV3UAJ4aTIs3A33m', 'default.jpg', 'Enache ', 'Nicolae', 'nicolae.enache@gmail.com', '1992-07-16', '2025-07-16', NULL, 0),
 (36, 'Gabriel', 2, '$2y$10$I9ST3Oh6xPlW5951qNAuJOlXrW2r2v0eAg87NSIza3eUEAw7fNqri', 'default.jpg', 'Dinu ', 'Gabriel', 'gabriel.dinu@gmail.com', '1998-01-16', '2025-07-16', NULL, 0),
 (37, 'Roxana', 2, '$2y$10$KIA78FDDEGdr0NxhCCvsLujIbkOY4FcB18IbQVFvvToZsKk81iwBu', 'pfp_687d554aa49c81.81139681.jpg', 'Stoica ', 'Roxana', 'roxana.stoica@gmail.com', '1998-10-14', '2025-07-16', NULL, 0),
-(38, 'Ioana', 2, '$2y$10$96aSUjhM2ah5NI0p14LwIulyQuZDaMZtqr7n6s/JLzShSHAmKMKTa', 'default.jpg', 'P', 'Ioana', 'ioana.2304@gmail.com', '2007-04-23', '2025-07-19', NULL, 0);
+(38, 'Ioana', 2, '$2y$10$96aSUjhM2ah5NI0p14LwIulyQuZDaMZtqr7n6s/JLzShSHAmKMKTa', 'default.jpg', 'P', 'Ioana', 'ioana@gmail.com', '2007-04-23', '2025-07-19', NULL, 0);
 
 --
 -- Indexes for dumped tables
