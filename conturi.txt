@@ -1,0 +1,20 @@
+username  ----> parola
+
+administratori
+admin     ----> admin123
+admin3    ----> Aa@123456
+
+utilizatori
+Gigel     ----> Aa@123456
+Andrei    ----> Aa@123456
+Mihai     ----> Aa@123456
+Matei     ----> Aa@123456
+Alexandru ----> Aa@123456
+Ștefan    ----> Aa@123456
+Daniela   ----> Aa@123456
+Adriana   ----> Aa@123456
+Simona    ----> Aa@123456
+Nicolae   ----> Aa@123456
+Gabriel   ----> Aa@123456
+Roxana    ----> Aa@123456
+Ioana     ----> Aa@123456
