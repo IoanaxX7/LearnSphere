@@ -1,3 +1,8 @@
+Baza de date:
+resurse/other/new database.sql
+
+
+Conturi:
 username  ----> parola
 
 administratori
